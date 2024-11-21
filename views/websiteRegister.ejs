@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Merca-Finds Customer Registration</title>
+</head>
+<body>
+    <!-- This one is already working.
+          TO DO: Aesthetics of the Website-->
+          
+    <div class="customerRegister-container">
+        <h1 class="customerRegister-text-header">Customer Registration</h1>
+        <form class="customerRegister-form" id="registerForm" method="POST" action="/customer/register">
+            <!-- Input for Username -->
+            <input class="customerRegister-input" type="text" placeholder="Email" id="username" name="username" required>
+            <!-- Input for First Name -->
+            <input class="customerRegister-input" type="text" placeholder="First Name" id="fname" name="fname" required>
+            <!-- Input for Last Name -->
+            <input class="customerRegister-input" type="text" placeholder="Last Name" id="lname" name="lname" required>
+            <!-- Input for Contact Number -->
+            <input class="customerRegister-input" type="text" placeholder="Contact Number" id="contactNumber" name="contactNumber" required>
+            <!-- Input for Address -->
+            <input class="customerRegister-input" type="text" placeholder="Address" id="address" name="address" required>
+            <!-- Input for Password -->
+            <input class="customerRegister-input" type="password" placeholder="Password" id="password" name="password" required>
+            <!-- Input for Confirm Password -->
+            <input class="customerRegister-input" type="password" placeholder="Confirm Password" id="confirmPassword" name="confirmPassword" required>
+            <!-- Submit Button -->
+            <button type="submit" class="customerRegister-button">Register</button>
+        </form>
+    </div>
+</body>
+</html>
