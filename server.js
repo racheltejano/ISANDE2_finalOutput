@@ -45,24 +45,21 @@ app.get('/', (req, res) => {
 const websiteRegisterRoute = require('./server/routes/websiteRegisterRoute');
 app.use('/customer', websiteRegisterRoute);
 
-
 // Import the system register route
 const systemRegisterRoute = require('./server/routes/systemRegisterRoute');
 app.use('/system', systemRegisterRoute);
-
-
 
 //Route for Logging In (System)
 const systemLoginRoute = require('./server/routes/systemLoginRoute');
 app.use('/systemLogin', systemLoginRoute);
 
-
-
-
 //Route for Logging In (Website)
 const websiteLoginRoute = require('./server/routes/websiteLoginRoute');
 app.use('/websiteLogin', websiteLoginRoute);
 
+//Route for Admin Account (System)
+const adminRoute = require('./server/routes/adminRoute');
+app.use('/admin', adminRoute);
 
 
 
@@ -71,9 +68,8 @@ app.use('/websiteLogin', websiteLoginRoute);
 //const customerRoute = require('./server/routes/customerRoute'); 
 //app.use('/customer', customerRoute); 
 
-//Route for Admin Account (System)
-//const adminRoute = require('./server/routes/adminRoute'); 
-//app.use('/admin', adminRoute); 
+
+
 
 //Route for Sellers (System)
 //const sellerRoute = require('./server/routes/sellerRoute.js'); 

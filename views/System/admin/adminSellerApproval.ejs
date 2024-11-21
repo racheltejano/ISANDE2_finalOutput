@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Admin Seller Approval</title>
+    <script>
+        function confirmAction(sellerId, action) {
+            const confirmation = confirm(`Are you sure you want to ${action} this seller?`);
+            if (confirmation) {
+                fetch(`/admin/seller-approval/${sellerId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Action successful!');
+                        location.reload();
+                    } else {
+                        alert('An error occurred. Please try again.');
+                    }
+                })
+                .catch(err => alert('Error connecting to server. Please try again.'));
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Pending Sellers for Approval</h1>
+    <% if (pendingSellers.length > 0) { %>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Seller Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% pendingSellers.forEach(seller => { %>
+                    <tr>
+                        <td>
+                            <div class="seller-box" onclick="toggleDetails('<%= seller.seller_id %>')">
+                                <strong>Seller Name:</strong> <%= seller.name %> 
+                            </div>
+                            
+                            <div id="details-<%= seller.id %>" class="seller-details" style="display: none;">
+                                <ul>
+                                    <li><strong>Contact Info:</strong> <%= seller.contact_info %></li>
+                                    <li><strong>Email:</strong> <%= seller.user ? seller.user.username : 'N/A' %></li>
+                                    <li><strong>Address:</strong> <%= seller.address %></li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <button onclick="confirmAction('<%= seller.seller_id %>', 'approve')">Approve</button>
+                            <button onclick="confirmAction('<%= seller.seller_id %>', 'reject')">Reject</button>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>No sellers are currently pending approval.</p>
+    <% } %>
+
+    <script>
+        function toggleDetails(id) {
+            const details = document.getElementById(`details-${id}`);
+            details.style.display = details.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>
+
+
+
