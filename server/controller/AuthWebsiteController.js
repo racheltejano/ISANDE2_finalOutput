@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const supabaseClient = require('../database/supabaseClient');
 
+//WORKING ALREADY DO NOT TOUCH
+
 const authWebsiteController = {
   login: async (req, res) => {
     const { username, password } = req.body;
@@ -13,16 +15,19 @@ const authWebsiteController = {
 
       // Fetch the user from the database by username
       const { data: user, error } = await supabaseClient
-        .from('user')
+        .from('users')
         .select('*')
-        .eq('userName', username)
+        .eq('username', username)
         .single();
 
+
       if (error) {
+        console.error('Error fetching user:', error);
         return res.status(500).send('Error fetching user');
       }
 
-      if (!user) {
+      if (error || !user) {
+        console.error('User not found or error fetching user:', error);
         return res.status(401).send('Invalid username or password');
       }
 
@@ -33,9 +38,8 @@ const authWebsiteController = {
       }
 
       // Check the user's role and proceed accordingly
-      if (user.role_id !== 1) {
-        // Only customers (role_id: 1) are allowed to log in to the website
-        return res.status(403).send('Access restricted to customers only');
+      if (user.role_id !== 1) { // Ensure only customers (role_id: 1) can log in
+        return res.status(403).send('Access restricted to customers only.');
       }
 
       // Set session for the customer

@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 
 
+
 // Middleware to serve static assets from the "public" directory
 app.use(express.static(__dirname + '/public'));
 
@@ -40,7 +41,6 @@ app.get('/', (req, res) => {
 
 
 // Define routes
-
 // Route for Registration (Website) -WORKING ALREADY DO NOT TOUCH
 const websiteRegisterRoute = require('./server/routes/websiteRegisterRoute');
 app.use('/customer', websiteRegisterRoute);
@@ -52,11 +52,6 @@ app.use('/system', systemRegisterRoute);
 
 
 
-
-
-
-
-
 //Route for Logging In (System)
 const systemLoginRoute = require('./server/routes/systemLoginRoute');
 app.use('/systemLogin', systemLoginRoute);
@@ -65,8 +60,8 @@ app.use('/systemLogin', systemLoginRoute);
 
 
 //Route for Logging In (Website)
-//const websiteLoginRoute = require('./server/routes/websiteLoginRoute');
-//app.use('/websiteLogin', websiteLoginRoute);
+const websiteLoginRoute = require('./server/routes/websiteLoginRoute');
+app.use('/websiteLogin', websiteLoginRoute);
 
 
 

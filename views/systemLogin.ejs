@@ -4,15 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/styles.css">
-    <title>System Login Page</title>
+    <title>System Login</title>
 </head>
 <body>
+    <!-- This one is already working.
+          TO DO: Aesthetics of the Website System-->
     <div class="systemLogin-container">
         <h1 class="systemLogin-text-header">System Login</h1>
-        <form class="systemLogin-form" id="loginForm" method="POST" action="/systemLogin/login">
-            <input class="systemLogin-input" type="text" placeholder="Username" id="username" name="username" required>
-            <input class="systemLogin-input" type="password" placeholder="Password" id="password" name="password" required>
-            <button type="submit" class="systemLogin-button">Log In</button>
+        <form method="POST" action="/systemLogin">
+            <input class="systemLogin-input" type="text" placeholder="Email" name="username">
+            <input class="systemLogin-input" type="password" placeholder="Password" name="password"> 
+            <button class="systemLogin-button" type="submit">Log In</button> 
         </form>
     </div>
 </body>
