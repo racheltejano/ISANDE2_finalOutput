@@ -36,7 +36,7 @@ const updateSellerApproval = async (req, res) => {
             const { error } = await supabaseClient
                 .from('sellers')
                 .update({ approval_status: true })
-                .eq('id', sellerId);
+                .eq('seller_id', sellerId);
 
             if (error) {
                 console.error('Error approving seller:', error);
@@ -47,7 +47,7 @@ const updateSellerApproval = async (req, res) => {
             const { error } = await supabaseClient
                 .from('sellers')
                 .delete()
-                .eq('id', sellerId);
+                .eq('seller_id', sellerId);
 
             if (error) {
                 console.error('Error rejecting seller:', error);
