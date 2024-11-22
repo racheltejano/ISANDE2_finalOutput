@@ -1,0 +1,73 @@
+<nav class="navbar">
+    <div class="navbar-logo">
+        <a href="/" class="navbar-brand">Merca-Finds</a>
+    </div>
+    <ul class="navbar-links">
+        <li class="navbar-item">
+            <a href="/customer/register" class="navbar-link">Sign Up to Shop!</a>
+        </li>
+        <li class="navbar-item">
+            <a href="/website/index.js" class="navbar-link">Go to Website</a>
+        </li>
+        <li class="navbar-item">
+            <a href="/systemLogin" class="navbar-link navbar-button">Login as Seller</a>
+        </li>
+    </ul>
+</nav>
+
+<style>
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background-color: #ffae50;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-logo .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .navbar-links {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+        gap: 1rem;
+    }
+
+    .navbar-item {
+        display: inline-block;
+    }
+
+    .navbar-link {
+        text-decoration: none;
+        font-size: 1rem;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .navbar-link:hover {
+        background-color: #c27b28;
+    }
+
+    .navbar-button {
+        background-color: #fff;
+        color: #ffae50;
+        font-weight: bold;
+        border: 2px solid #fff;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-button:hover {
+        background-color: #c27b28;
+        color: #fff;
+        border-color: #fff;
+    }
+</style>

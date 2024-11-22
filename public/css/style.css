@@ -1,190 +1,154 @@
-/* styles.css */
-
-/* Reset default margin and padding */
-* {
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-/* Apply a background color to the entire page */
-body {
-    background-color: #f2f2f2;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-/* Style the login container */
-.login-container {
-    width: 100%;
-    max-width: 400px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-}
-
-/* Style the login header */
-.login-text-header {
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 20px;
+    background-color: #f9f9f9;
     color: #333;
 }
 
-/* Style the login form */
-.login-form {
-    text-align: center;
+/* Navbar Styles */
+.navbar {
+    background-color: #007BFF;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 4px 2px -2px gray;
 }
 
-/* Style the input fields */
-.login-input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
 }
 
-/* Style the login button */
-.login-button {
-    width: 100%;
-    background-color: #3498db;
+.navbar-logo {
     color: #fff;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-/* Change button color on hover */
-.login-button:hover {
-    background-color: #2980b9;
-}
-
-/* Center the button text */
-.login-button:focus {
-    outline: none;
-}
-
-/* Style for the link (if you have any) */
-.login-link {
-    color: #3498db;
+    font-size: 1.5rem;
     text-decoration: none;
 }
 
-/* Style for the link on hover */
-.login-link:hover {
-    text-decoration: underline;
+.navbar-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
 }
 
-
-
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-}
-
-.form-group {
-    text-align: left;
-    margin: 10px 0;
-}
-
-label {
-    display: block;
-    font-size: 12px;
-    margin-bottom: 4px;
-    color: #333;
-}
-
-.user-creation-container {
-    max-width: 400px;
-    margin: 0 auto;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-top: 50px;
-}
-
-.user-creation-header {
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-#user-creation-form {
-    text-align: center;
-}
-
-input, select {
-    width: 150%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-#createUserButton {
-    width: 100%;
-    background-color: #3498db;
+.navbar-item {
     color: #fff;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    font-size: 18px;
-    cursor: pointer;
+    padding: 0 1rem;
+    text-decoration: none;
+    font-weight: bold;
 }
 
-#createUserButton:hover {
-    background-color: #2980b9;
+.navbar-item:hover {
+    background-color: #0056b3;
+    border-radius: 5px;
 }
 
-#createUserButton:focus {
+/* Registration Form Styles */
+.customerRegister-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 2rem auto;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+}
+
+.customerRegister-text-header {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #007BFF;
+    font-weight: bold;
+}
+
+.customerRegister-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.customerRegister-form input {
+    width: 100%;
+    padding: 0.9rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    transition: 0.3s ease;
+}
+
+.customerRegister-form input:focus {
+    border-color: #007BFF;
+    background-color: #fff;
     outline: none;
 }
 
-.popup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 150%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+.customerRegister-button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: 0.3s ease;
 }
 
-.popup-content {
-    background-color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    border-radius: 4px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+.customerRegister-button:hover {
+    background-color: #0056b3;
+}
+
+/* GIF Container */
+.customerRegister-gif-container {
+    margin-top: 2rem;
     text-align: center;
 }
 
-.close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 20px;
-    color: #333;
+.customerRegister-gif {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 10px;
 }
 
-.close:hover {
-    color: #f00;
+/* Footer Styles */
+.footer {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
 }
 
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+.footer-links {
+    margin-top: 1rem;
+}
+
+.footer-link {
+    color: #fff;
+    text-decoration: none;
+    padding: 0 0.5rem;
+    font-weight: bold;
+}
+
+.footer-link:hover {
+    text-decoration: underline;
+}

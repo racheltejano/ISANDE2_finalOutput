@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
 
 
 // Define routes
-// Route for Registration (Website) -WORKING ALREADY DO NOT TOUCH
+// Route for Registration (Website) 
 const websiteRegisterRoute = require('./server/routes/websiteRegisterRoute');
 app.use('/customer', websiteRegisterRoute);
 
@@ -60,6 +60,17 @@ app.use('/websiteLogin', websiteLoginRoute);
 //Route for Admin Account (System)
 const adminRoute = require('./server/routes/adminRoute');
 app.use('/admin', adminRoute);
+
+
+
+
+
+// Route for Sellers (System)
+const sellerRoute = require('./server/routes/sellerRoute');
+app.use('/seller', sellerRoute);
+
+
+
 
 
 
