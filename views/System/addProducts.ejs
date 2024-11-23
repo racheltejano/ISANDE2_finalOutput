@@ -155,29 +155,31 @@
   <div class="container">
     <div class="form-container">
       <h1>Add Product</h1>
-      <form id="addProductForm" action="/your-post-endpoint" method="POST" enctype="multipart/form-data">
+      <form id="addProductForm" action="/seller/add-product" method="POST" enctype="multipart/form-data">
         <!-- Product Name -->
         <div class="form-group">
           <label for="productName">Product Name</label>
-          <input type="text" id="productName" name="productName" placeholder="Enter product name" required>
+          <input type="text" id="name" name="name" placeholder="Enter product name" required>
+
         </div>
 
         <!-- Category -->
         <div class="form-group">
           <label for="productType">Category</label>
-          <select id="productType" name="productType" required>
+          <select id="productType" name="category_id" required>
             <option value="" disabled selected>Select a category</option>
-            <option value="Clothes">Clothes</option>
-            <option value="Accessories">Accessories</option>
-            <option value="Gadgets">Gadgets</option>
-            <option value="Cameras">Cameras</option>
-            <option value="Makeup">Makeup</option>
-            <option value="Skincare">Skincare</option>
-            <option value="Furniture">Furniture</option>
-            <option value="Books">Books</option>
-            <option value="Toys">Toys</option>
-            <option value="Shoes">Shoes</option>
+            <option value="1">Clothes</option>
+            <option value="2">Accessories</option>
+            <option value="3">Gadgets</option>
+            <option value="4">Cameras</option>
+            <option value="5">Makeup</option>
+            <option value="6">Skincare</option>
+            <option value="7">Furniture</option>
+            <option value="8">Books</option>
+            <option value="9">Toys</option>
+            <option value="10">Shoes</option>
           </select>
+          
         </div>
 
         <!-- Price -->
@@ -211,51 +213,51 @@
     const dynamicFields = document.getElementById('dynamicFields');
 
     const dynamicInputs = {
-      Clothes: [
+      1: [
         { label: 'Size', name: 'size', type: 'text', placeholder: 'Comma-separated (e.g., S, M, L)' },
         { label: 'Color', name: 'color', type: 'text', placeholder: 'Comma-separated (e.g., Red, Blue)' },
         { label: 'Gender', name: 'gender', type: 'select', options: ['Men', 'Women', 'Unisex'] }
       ],
-      Accessories: [
+      2: [
         { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Gold, Leather' },
         { label: 'Dimensions', name: 'dimensions', type: 'text', placeholder: 'e.g., 5x5 cm' }
       ],
-      Gadgets: [
+      3: [
         { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Sony, Apple' },
         { label: 'Warranty', name: 'warranty', type: 'text', placeholder: 'e.g., 1 Year' },
         { label: 'Specifications', name: 'specifications', type: 'textarea', placeholder: 'Describe specs' }
       ],
-      Cameras: [
+      4: [
         { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Canon, Nikon' },
         { label: 'Lens', name: 'lens', type: 'text', placeholder: 'e.g., 50mm, Wide Angle' },
         { label: 'Resolution', name: 'resolution', type: 'text', placeholder: 'e.g., 1080p, 4K' }
       ],
-      Makeup: [
+      5: [
         { label: 'Shade', name: 'shade', type: 'text', placeholder: 'e.g., Nude, Red' },
         { label: 'Type', name: 'type', type: 'select', options: ['Lipstick', 'Foundation', 'Mascara', 'Eyeshadow'] },
         { label: 'Skin Type', name: 'skin_type', type: 'select', options: ['Oily', 'Dry', 'Combination', 'Sensitive'] }
       ],
-      Skincare: [
+      6: [
         { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., CeraVe, La Roche-Posay' },
         { label: 'Skin Concern', name: 'skin_concern', type: 'text', placeholder: 'e.g., Acne, Wrinkles' },
         { label: 'Usage', name: 'usage', type: 'text', placeholder: 'e.g., Night, Day' }
       ],
-      Furniture: [
+      7: [
         { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Wood, Metal' },
         { label: 'Dimensions', name: 'dimensions', type: 'text', placeholder: 'e.g., 2x3 ft' },
         { label: 'Assembly Required', name: 'assembly', type: 'select', options: ['Yes', 'No'] }
       ],
-      Books: [
+      8: [
         { label: 'Author', name: 'author', type: 'text', placeholder: 'e.g., J.K. Rowling' },
         { label: 'Genre', name: 'genre', type: 'text', placeholder: 'e.g., Fiction, Thriller' },
         { label: 'ISBN', name: 'isbn', type: 'text', placeholder: 'e.g., 978-3-16-148410-0' }
       ],
-      Toys: [
+      9: [
         { label: 'Age Group', name: 'age_group', type: 'text', placeholder: 'e.g., 3-5 years, 6-8 years' },
         { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Plastic, Wood' },
         { label: 'Safety Certification', name: 'safety', type: 'text', placeholder: 'e.g., ASTM Certified' }
       ],
-      Shoes: [
+      10: [
         { label: 'Size', name: 'size', type: 'text', placeholder: 'Comma-separated (e.g., 7, 8, 9)' },
         { label: 'Color', name: 'color', type: 'text', placeholder: 'Comma-separated (e.g., Black, White)' },
         { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Leather, Rubber' }

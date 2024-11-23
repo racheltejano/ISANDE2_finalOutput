@@ -9,7 +9,6 @@ exports.uploadImages = upload.array('images');
 // Display the Add Product Page
 exports.getAddProductPage = async (req, res) => {
   try {
-    // Fetch categories from the database
     const { data: categories, error } = await supabase.from('categories').select('*');
     if (error) throw error;
 
@@ -24,9 +23,9 @@ exports.getAddProductPage = async (req, res) => {
 exports.addProduct = async (req, res) => {
   try {
     const { name, category_id, price, stock, description, colors, sizes } = req.body;
-    const seller_id = req.session.user?.user_id; // Make sure user session contains seller details
+    const seller_id = req.session.user?.user_id; // Ensure session exists
 
-    // Insert product into the database
+    // Insert the main product
     const { data: product, error: productError } = await supabase
       .from('products')
       .insert([{ seller_id, category_id, name, price, stock, description, status: true }])
@@ -34,7 +33,7 @@ exports.addProduct = async (req, res) => {
       .single();
     if (productError) throw productError;
 
-    // Handle color and size variants
+    // Insert variants
     const colorsArr = colors ? colors.split(',').map((c) => c.trim()) : [];
     const sizesArr = sizes ? sizes.split(',').map((s) => s.trim()) : [];
 
@@ -50,24 +49,30 @@ exports.addProduct = async (req, res) => {
       }
     }
 
-    // Handle image uploads
-    if (req.files) {
+    // Upload images
+    if (req.files && req.files.length > 0) {
       for (const file of req.files) {
-        const { data: img, error: imgError } = await supabase.storage
-          .from('product-images')
-          .upload(`${product.product_id}/${file.originalname}`, file.buffer, {
+        const uploadPath = `${product.product_id}/${file.originalname}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('product_images') // Match bucket name exactly
+          .upload(uploadPath, file.buffer, {
             contentType: file.mimetype,
           });
-        if (imgError) throw imgError;
 
-        await supabase.from('product_images').insert({
+        if (uploadError) throw new Error(`Image Upload Error: ${uploadError.message}`);
+
+        // Insert image URL into the `product_images` table
+        const imageUrl = `${supabaseUrl}/storage/v1/object/public/product_images/${uploadPath}`;
+        const { error: imageInsertError } = await supabase.from('product_images').insert({
           product_id: product.product_id,
-          image_url: img.path,
+          image_url: imageUrl,
         });
+
+        if (imageInsertError) throw new Error(`Image Insert Error: ${imageInsertError.message}`);
       }
     }
 
-    res.redirect('/seller/dashboard'); // Redirect to seller dashboard
+    res.redirect('/seller/dashboard');
   } catch (err) {
     console.error('Error adding product:', err.message);
     res.status(500).send('Server Error');

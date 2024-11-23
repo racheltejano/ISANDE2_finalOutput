@@ -33,6 +33,8 @@ const protectRoute = (req, res, next) => {
   next();
 };
 
+
+
 // Define the default route for login
 app.get('/', (req, res) => {
   res.render('systemLogin', { pageTitle: 'System Login Page' });
@@ -62,13 +64,9 @@ const adminRoute = require('./server/routes/adminRoute');
 app.use('/admin', adminRoute);
 
 
-
-
-
-// Route for Sellers (System)
+// Route for Sellers (Add Product functionality, dashboard, etc.)
 const sellerRoute = require('./server/routes/sellerRoute');
-app.use('/seller', sellerRoute);
-
+app.use('/seller', protectRoute, sellerRoute);
 
 
 
