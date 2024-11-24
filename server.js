@@ -42,6 +42,9 @@ app.get('/', (req, res) => {
 
 
 
+
+
+
 // Define routes
 // Route for Registration (Website) 
 const websiteRegisterRoute = require('./server/routes/websiteRegisterRoute');
