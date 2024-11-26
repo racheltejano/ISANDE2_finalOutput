@@ -1,46 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merca-Finds Dashboard</title>
-    <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-
-    <div id="sidebar-admin">
-        <div id="company-logo">
-            <img src="/public/css/images/Placeholder.png" alt="Company Logo">
-            <h1>Merca-Finds</h1>
-        </div>
-        <hr>
-        <ul>
-            <!-- Dashboard Link -->
-            <li><i class="fas fa-home"></i><a href="/admin/dashboard">Dashboard</a></li>
-
-            <!-- Approve Section with Submenu -->
-            <li><i class="fas fa-check-circle"></i>Approve
-                <ul>
-                    <li><i class="fas fa-user-check"></i><a href="/owner/ApproveSellers">Sellers</a></li>
-                    <li><i class="fas fa-cogs"></i><a href="/owner/ApproveProducts">Products</a></li>
-                </ul>
-            </li>
-
-            <!-- View Section with Submenu -->
-            <li><i class="fas fa-eye"></i>View
-                <ul>
-                    <li><i class="fas fa-box"></i><a href="/owner/ViewInventory">Inventory</a></li>
-                    <li><i class="fas fa-chart-line"></i><a href="/owner/ViewSales">Sales</a></li>
-                </ul>
-            </li>
-
-            <!-- My Account and Log Out -->
-            <li><i class="fas fa-user"></i><a href="/owner/MyAccount">My Account</a></li>
-            <li><i class="fas fa-sign-out-alt"></i><a href="/logout">Log Out</a></li>
-        </ul>
+<nav class="sidebar">
+    <div class="logo">
+      <img src="/images/logo.png" alt="Logo">
+      <h1>Admin Panel</h1>
     </div>
-
-</body>
-
-</html>
+    <ul class="sidebar-menu">
+      <li class="menu-item">
+        <a href="/admin/dashboard">
+          <img src="/images/dashboard-icon.gif" alt="Dashboard Icon" class="icon">
+          Dashboard
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/products">
+          <img src="/images/products-icon.gif" alt="Products Icon" class="icon">
+          Products
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/orders">
+          <img src="/images/orders-icon.gif" alt="Orders Icon" class="icon">
+          Orders
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/sellers">
+          <img src="/images/sellers-icon.gif" alt="Sellers Icon" class="icon">
+          Sellers
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/admin/settings">
+          <img src="/images/settings-icon.gif" alt="Settings Icon" class="icon">
+          Settings
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/logout">
+          <img src="/images/logout-icon.gif" alt="Logout Icon" class="icon">
+          Logout
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
