@@ -5,31 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add Product</title>
   <style>
+    /* General styles */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f9f9f9;
+      background-color: #f4f4f9;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1000px; /* Increase width to accommodate both sections */
       margin: 50px auto;
       padding: 20px;
-      background: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background: #ffffff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
       display: flex;
-      gap: 20px;
+      justify-content: space-between; /* Space between the form and the image section */
     }
 
     h1 {
       text-align: center;
       color: #333;
+      margin-bottom: 20px;
     }
 
     .form-container {
-      flex: 2;
+      flex: 1;
+      margin-right: 20px; /* Add space between form and image upload */
     }
 
     .form-group {
@@ -44,8 +47,9 @@
 
     input[type="text"],
     input[type="number"],
-    select,
-    textarea {
+    input[type="file"],
+    textarea,
+    select {
       width: 100%;
       padding: 10px;
       border: 1px solid #ddd;
@@ -57,13 +61,17 @@
       resize: vertical;
     }
 
+    input[type="file"] {
+      border: none;
+    }
+
     button {
       display: block;
       width: 100%;
-      padding: 10px;
       background-color: #28a745;
       color: #fff;
       border: none;
+      padding: 10px;
       border-radius: 5px;
       font-size: 16px;
       cursor: pointer;
@@ -76,10 +84,9 @@
     .image-upload-container {
       flex: 1;
       padding: 20px;
-      background-color: #f4f4f9;
+      background-color: #f9f9f9;
       border-radius: 8px;
-      border: 1px dashed #ddd;
-      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .image-upload-container h2 {
@@ -87,37 +94,79 @@
       margin-bottom: 15px;
     }
 
-    .image-preview {
-      margin-top: 10px;
+    /* Ensuring the images inside the image preview are centered and appropriately sized */
+    .image-preview-wrapper {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .image-preview {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      background: #fff;
     }
 
     .image-preview img {
-      width: 80px;
-      height: 80px;
-      border-radius: 5px;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
+    }
+
+    .image-preview .remove-image {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: #ff4444;
+      color: #fff;
+      font-size: 12px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .upload-btn {
+      display: inline-block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      color: #fff;
+      background-color: #4caf50;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .upload-btn:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Form Section -->
     <div class="form-container">
       <h1>Add Product</h1>
       <form id="addProductForm" action="/seller/add-product" method="POST" enctype="multipart/form-data">
         <!-- Product Name -->
         <div class="form-group">
-          <label for="name">Product Name</label>
+          <label for="productName">Product Name</label>
           <input type="text" id="name" name="name" placeholder="Enter product name" required>
+
         </div>
 
         <!-- Category -->
         <div class="form-group">
-          <label for="category_id">Category</label>
-          <select id="category_id" name="category_id" required>
+          <label for="productType">Category</label>
+          <select id="productType" name="category_id" required>
             <option value="" disabled selected>Select a category</option>
             <option value="1">Clothes</option>
             <option value="2">Accessories</option>
@@ -130,6 +179,7 @@
             <option value="9">Toys</option>
             <option value="10">Shoes</option>
           </select>
+          
         </div>
 
         <!-- Price -->
@@ -144,162 +194,114 @@
           <input type="number" id="stock" name="stock" placeholder="Enter product stock" required>
         </div>
 
-        <!-- Description -->
-        <div class="form-group">
-          <label for="description">Description</label>
-          <textarea id="description" name="description" rows="4" placeholder="Enter product description"></textarea>
-        </div>
-
         <!-- Dynamic Fields -->
-        <div id="dynamicFields"></div>
-
-         <!-- Hidden input to store attributes JSON -->
-        <input type="hidden" id="attributes-json" name="attributes" />
-
+        <div class="dynamic-fields" id="dynamicFields"></div>
 
         <!-- Submit Button -->
-        <button type="submit" id="product-form">Add Product</button>
-
+        <button type="submit">Add Product</button>
       </form>
     </div>
 
-   <!-- Image Upload Section (Partial) -->
-   <div class="image-upload-container">
-    <%- include('../partials/imageUploadForm') %>
-  </div>
+    <!-- Image Upload Section (Partial) -->
+    <div class="image-upload-container">
+      <%- include('../partials/imageUploadForm') %>
+    </div>
   </div>
 
   <script>
-    const categorySelect = document.getElementById('category_id');
+    const productType = document.getElementById('productType');
     const dynamicFields = document.getElementById('dynamicFields');
 
     const dynamicInputs = {
-  1: [ // Clothing
-    { label: 'Size', name: 'size', type: 'text', placeholder: 'e.g., S, M, L', attribute_id: 1 },
-    { label: 'Color', name: 'color', type: 'text', placeholder: 'e.g., Red, Blue', attribute_id: 2 },
-    { label: 'Gender', name: 'gender', type: 'select', options: ['Men', 'Women', 'Unisex'], attribute_id: 3 }
-  ],
-  2: [ // Accessories
-    { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Leather, Metal', attribute_id: 4 },
-    { label: 'Color', name: 'color', type: 'text', placeholder: 'e.g., Black, Gold', attribute_id: 5 },
-    { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Fossil, Casio', attribute_id: 6 }
-  ],
-  3: [ // Gadgets
-    { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Apple, Samsung', attribute_id: 7 },
-    { label: 'Model', name: 'model', type: 'text', placeholder: 'e.g., iPhone 14, Galaxy S21', attribute_id: 8 },
-    { label: 'Features', name: 'features', type: 'text', placeholder: 'e.g., Bluetooth, NFC', attribute_id: 9 }
-  ],
-  4: [ // Cameras
-    { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Canon, Nikon', attribute_id: 10 },
-    { label: 'Lens', name: 'lens', type: 'text', placeholder: 'e.g., 50mm, Zoom Lens', attribute_id: 11 },
-    { label: 'Resolution', name: 'resolution', type: 'text', placeholder: 'e.g., 1080p, 4K', attribute_id: 12 }
-  ],
-  5: [ // Shoes
-    { label: 'Size', name: 'size', type: 'text', placeholder: 'e.g., 6, 7, 8', attribute_id: 13 },
-    { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Leather, Canvas', attribute_id: 14 },
-    { label: 'Color', name: 'color', type: 'text', placeholder: 'e.g., White, Black', attribute_id: 15 }
-  ],
-  6: [ // Bags
-    { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Louis Vuitton, Gucci', attribute_id: 16 },
-    { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Leather, Nylon', attribute_id: 17 },
-    { label: 'Size', name: 'size', type: 'text', placeholder: 'e.g., Small, Medium, Large', attribute_id: 18 }
-  ],
-  7: [ // Furniture
-    { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Wood, Metal', attribute_id: 19 },
-    { label: 'Dimensions', name: 'dimensions', type: 'text', placeholder: 'e.g., 5ft x 3ft', attribute_id: 20 },
-    { label: 'Color', name: 'color', type: 'text', placeholder: 'e.g., Brown, White', attribute_id: 21 }
-  ],
-  8: [ // Books
-    { label: 'Author', name: 'author', type: 'text', placeholder: 'e.g., J.K. Rowling, George Orwell', attribute_id: 22 },
-    { label: 'Genre', name: 'genre', type: 'text', placeholder: 'e.g., Fiction, Non-Fiction', attribute_id: 23 },
-    { label: 'Language', name: 'language', type: 'text', placeholder: 'e.g., English, Spanish', attribute_id: 24 }
-  ],
-  9: [ // Electronics
-    { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Sony, LG', attribute_id: 25 },
-    { label: 'Model', name: 'model', type: 'text', placeholder: 'e.g., Bravia X90', attribute_id: 26 },
-    { label: 'Power', name: 'power', type: 'text', placeholder: 'e.g., 220V, 110V', attribute_id: 27 }
-  ],
-  10: [ // Jewelry
-    { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Gold, Silver', attribute_id: 28 },
-    { label: 'Gemstone', name: 'gemstone', type: 'text', placeholder: 'e.g., Diamond, Sapphire', attribute_id: 29 },
-    { label: 'Weight', name: 'weight', type: 'text', placeholder: 'e.g., 1g, 2g', attribute_id: 30 }
-  ]
-};
+      1: [
+        { label: 'Size', name: 'size', type: 'text', placeholder: 'Comma-separated (e.g., S, M, L)' },
+        { label: 'Color', name: 'color', type: 'text', placeholder: 'Comma-separated (e.g., Red, Blue)' },
+        { label: 'Gender', name: 'gender', type: 'select', options: ['Men', 'Women', 'Unisex'] }
+      ],
+      2: [
+        { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Gold, Leather' },
+        { label: 'Dimensions', name: 'dimensions', type: 'text', placeholder: 'e.g., 5x5 cm' }
+      ],
+      3: [
+        { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Sony, Apple' },
+        { label: 'Warranty', name: 'warranty', type: 'text', placeholder: 'e.g., 1 Year' },
+        { label: 'Specifications', name: 'specifications', type: 'textarea', placeholder: 'Describe specs' }
+      ],
+      4: [
+        { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Canon, Nikon' },
+        { label: 'Lens', name: 'lens', type: 'text', placeholder: 'e.g., 50mm, Wide Angle' },
+        { label: 'Resolution', name: 'resolution', type: 'text', placeholder: 'e.g., 1080p, 4K' }
+      ],
+      5: [
+        { label: 'Shade', name: 'shade', type: 'text', placeholder: 'e.g., Nude, Red' },
+        { label: 'Type', name: 'type', type: 'select', options: ['Lipstick', 'Foundation', 'Mascara', 'Eyeshadow'] },
+        { label: 'Skin Type', name: 'skin_type', type: 'select', options: ['Oily', 'Dry', 'Combination', 'Sensitive'] }
+      ],
+      6: [
+        { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., CeraVe, La Roche-Posay' },
+        { label: 'Skin Concern', name: 'skin_concern', type: 'text', placeholder: 'e.g., Acne, Wrinkles' },
+        { label: 'Usage', name: 'usage', type: 'text', placeholder: 'e.g., Night, Day' }
+      ],
+      7: [
+        { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Wood, Metal' },
+        { label: 'Dimensions', name: 'dimensions', type: 'text', placeholder: 'e.g., 2x3 ft' },
+        { label: 'Assembly Required', name: 'assembly', type: 'select', options: ['Yes', 'No'] }
+      ],
+      8: [
+        { label: 'Author', name: 'author', type: 'text', placeholder: 'e.g., J.K. Rowling' },
+        { label: 'Genre', name: 'genre', type: 'text', placeholder: 'e.g., Fiction, Thriller' },
+        { label: 'ISBN', name: 'isbn', type: 'text', placeholder: 'e.g., 978-3-16-148410-0' }
+      ],
+      9: [
+        { label: 'Age Group', name: 'age_group', type: 'text', placeholder: 'e.g., 3-5 years, 6-8 years' },
+        { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Plastic, Wood' },
+        { label: 'Safety Certification', name: 'safety', type: 'text', placeholder: 'e.g., ASTM Certified' }
+      ],
+      10: [
+        { label: 'Size', name: 'size', type: 'text', placeholder: 'Comma-separated (e.g., 7, 8, 9)' },
+        { label: 'Color', name: 'color', type: 'text', placeholder: 'Comma-separated (e.g., Black, White)' },
+        { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Leather, Rubber' }
+      ]
+    };
 
+    productType.addEventListener('change', () => {
+      const selectedType = productType.value;
+      dynamicFields.innerHTML = ''; // Clear previous fields
 
-categorySelect.addEventListener('change', () => {
-  const selectedCategory = categorySelect.value;
-  dynamicFields.innerHTML = '';  
+      if (dynamicInputs[selectedType]) {
+        dynamicInputs[selectedType].forEach(field => {
+          const div = document.createElement('div');
+          div.className = 'form-group';
 
-  if (dynamicInputs[selectedCategory]) {
-    dynamicInputs[selectedCategory].forEach(field => {
-      const group = document.createElement('div');
-      group.className = 'form-group';
+          const label = document.createElement('label');
+          label.textContent = field.label;
+          div.appendChild(label);
 
-      const label = document.createElement('label');
-      label.textContent = field.label;
-      group.appendChild(label);
+          if (field.type === 'select') {
+            const select = document.createElement('select');
+            select.name = field.name;
+            select.required = true;
 
-      let inputElement;
+            field.options.forEach(option => {
+              const opt = document.createElement('option');
+              opt.value = option;
+              opt.textContent = option;
+              select.appendChild(opt);
+            });
+            div.appendChild(select);
+          } else {
+            const input = document.createElement(field.type === 'textarea' ? 'textarea' : 'input');
+            input.type = field.type;
+            input.name = field.name;
+            input.placeholder = field.placeholder;
+            input.required = true;
+            div.appendChild(input);
+          }
 
-      if (field.type === 'select') {
-        // Create select input for 'select' type fields
-        const select = document.createElement('select');
-        select.name = `attribute_${field.name}`;
-        select.required = true;
-
-        field.options.forEach(option => {
-          const opt = document.createElement('option');
-          opt.value = option;
-          opt.textContent = option;
-          select.appendChild(opt);
+          dynamicFields.appendChild(div);
         });
-
-         // Add the 'attribute' class and the 'data-id' to the select element
-         select.classList.add('attribute');
-        select.setAttribute('data-id', field.attribute_id); // Add the attribute_id as data-id
-        inputElement = select;
-      } else {
-        // Create input or textarea for other types
-        const input = document.createElement(field.type === 'textarea' ? 'textarea' : 'input');
-        input.type = field.type;
-        input.name = `attribute_${field.name}`;
-        input.placeholder = field.placeholder;
-        input.required = true;
-
-        // Add the 'attribute' class to the input element
-        input.classList.add('attribute');
-        input.setAttribute('data-id', field.attribute_id); // Add the attribute_id as data-id
-        inputElement = input;
-      }
-
-      group.appendChild(inputElement);
-      dynamicFields.appendChild(group);
-    });
-  }
-});
-
-    document.getElementById('addProductForm').addEventListener('submit', function (event) {
-
-    event.preventDefault();
-    const attributes = [];
-    const attributeFields = document.querySelectorAll('.attribute');
-
-    attributeFields.forEach((field) => {
-      const attribute_id = field.getAttribute('data-id'); // Attribute ID from `data-id`
-      const value = field.value; // The user's input or selected value
-      if (value) {
-        attributes.push({ attribute_id: parseInt(attribute_id), value });
       }
     });
-
-    // Set the JSON string in the hidden input
-    document.getElementById('attributes-json').value = JSON.stringify(attributes);
-
-    // Submit the form
-    this.submit();
-  });
-
   </script>
 </body>
 </html>
