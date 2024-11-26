@@ -68,10 +68,36 @@
     <% } %>
 
     <script>
+        
         function toggleDetails(id) {
             const details = document.getElementById(`details-${id}`);
             details.style.display = details.style.display === 'none' ? 'block' : 'none';
         }
+
+        function confirmAction(sellerId, action) {
+        const confirmation = confirm(
+        `Are you sure you want to ${action} this seller?`
+        );
+        if (confirmation) {
+        fetch(`/admin/seller-approval/${sellerId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+            if (data.success) {
+                alert(`${action === 'approve' ? 'Approved' : 'Rejected'} successfully!`);
+                location.reload();
+            } else {
+                alert('An error occurred. Please try again.');
+            }
+            })
+            .catch(() =>
+            alert('Error connecting to server. Please try again later.')
+            );
+        }
+    }
     </script>
 </body>
 </html>

@@ -31,8 +31,13 @@ const systemLoginController = {
         return res.status(401).send('Invalid username or password');
       }
 
+      if (user.role_id === 2 && user.approval_status == false) {
+        // Send a response indicating that the seller is pending approval
+        return res.status(403).send('Your seller account is pending approval. Please wait for admin approval.');
+      }
+      
       // Check the user's role and proceed accordingly
-      if (user.role_id !== 2 && user.role_id !== 3) { // Allow only role_id: 2 and 3
+      if (user.role_id !== 2 && user.role_id !== 3) {
         return res.status(403).send('Access restricted to authorized users only.');
       }
 
