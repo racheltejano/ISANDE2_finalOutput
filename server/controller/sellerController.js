@@ -22,7 +22,7 @@ exports.getAddProductPage = async (req, res) => {
 // Handle Product Addition
 exports.addProduct = async (req, res) => {
   try {
-    const { name, category_id, price, stock, description, colors, sizes } = req.body;
+    const { name, category_id, price, stock, description, attributes } = req.body;
     const seller_id = req.session.user?.user_id; // Ensure session exists
 
     // Insert the main product
@@ -33,18 +33,15 @@ exports.addProduct = async (req, res) => {
       .single();
     if (productError) throw productError;
 
-    // Insert variants
-    const colorsArr = colors ? colors.split(',').map((c) => c.trim()) : [];
-    const sizesArr = sizes ? sizes.split(',').map((s) => s.trim()) : [];
-
-    for (const color of colorsArr) {
-      for (const size of sizesArr) {
-        await supabase.from('product_variants').insert({
+     // Parse attributes (dynamic inputs)
+     if (req.body.attributes) {
+      const attributes = JSON.parse(req.body.attributes); // Parse JSON if sent as string
+      for (const attribute of attributes) {
+        const { attribute_id, value } = attribute; // Ensure these keys exist
+        await supabase.from('product_attributes').insert({
           product_id: product.product_id,
-          color,
-          size,
-          price,
-          stock,
+          attribute_id,
+          value,
         });
       }
     }
@@ -72,7 +69,7 @@ exports.addProduct = async (req, res) => {
       }
     }
 
-    res.redirect('/seller/dashboard');
+    res.redirect('/seller/add-Product');
   } catch (err) {
     console.error('Error adding product:', err.message);
     res.status(500).send('Server Error');
