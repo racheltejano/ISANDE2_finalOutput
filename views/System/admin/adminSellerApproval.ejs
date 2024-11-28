@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Seller Approval Dashboard</title>
     <script>
         // Function to toggle details of the seller on click
@@ -37,7 +41,11 @@
     </script>
 </head>
 <body>
-    <main>
+    <aside class="sidebar">
+        <%- include('../../partials/sidebarAdmin') %>
+    </aside>
+    
+    <div class="main-content">
         <h1 class="seller-approval-title">Manage Pending Sellers</h1>
         <% if (pendingSellers.length > 0) { %>
             <table class="seller-approval-table">
