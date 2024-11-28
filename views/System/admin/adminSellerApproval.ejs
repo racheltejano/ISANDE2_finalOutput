@@ -3,104 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/styles.css">
-    <title>Admin Seller Approval</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Seller Approval Dashboard</title>
     <script>
-        function confirmAction(sellerId, action) {
-            const confirmation = confirm(`Are you sure you want to ${action} this seller?`);
-            if (confirmation) {
-                fetch(`/admin/seller-approval/${sellerId}`, {
+        // Function to toggle details of the seller on click
+        function toggleSellerDetails(sellerId) {
+            const detailsRow = document.getElementById(`details-row-${sellerId}`);
+            detailsRow.style.display = detailsRow.style.display === 'none' ? 'table-row' : 'none';
+        }
+
+        // Function to handle seller actions (approve/reject)
+        function handleSellerAction(sellerId, actionType) {
+            const confirmationMessage = actionType === 'approve' ? 'Approve' : 'Reject';
+            const confirmAction = confirm(`Are you sure you want to ${confirmationMessage} this seller?`);
+            if (confirmAction) {
+                fetch(`/admin/seller-action/${sellerId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action })
+                    body: JSON.stringify({ action: actionType })
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Action successful!');
+                        alert(`${confirmationMessage}d successfully!`);
                         location.reload();
                     } else {
                         alert('An error occurred. Please try again.');
                     }
                 })
-                .catch(err => alert('Error connecting to server. Please try again.'));
+                .catch(() => alert('Failed to connect to the server.'));
             }
         }
     </script>
 </head>
 <body>
-    <h1>Pending Sellers for Approval</h1>
-    <% if (pendingSellers.length > 0) { %>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Seller Name</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% pendingSellers.forEach(seller => { %>
+    <main>
+        <h1 class="seller-approval-title">Manage Pending Sellers</h1>
+        <% if (pendingSellers.length > 0) { %>
+            <table class="seller-approval-table">
+                <thead>
                     <tr>
-                        <td>
-                            <div class="seller-box" onclick="toggleDetails('<%= seller.seller_id %>')">
-                                <strong> <%= seller.name %> </strong>
-                            </div>
-                            
-                            <div id="details-<%= seller.id %>" class="seller-details" style="display: none;">
-                                <ul>
-                                    <li><strong>Contact Info:</strong> <%= seller.contact_info %></li>
-                                    <li><strong>Email:</strong> <%= seller.user ? seller.user.username : 'N/A' %></li>
-                                    <li><strong>Address:</strong> <%= seller.address %></li>
-                                </ul>
-                            </div>
-                        </td>
-                        <td>
-                            <button onclick="confirmAction('<%= seller.seller_id %>', 'approve')">Approve</button>
-                            <button onclick="confirmAction('<%= seller.seller_id %>', 'reject')">Reject</button>
-                        </td>
+                        <th class="seller-approval-col-name">Seller Name</th>
+                        <th class="seller-approval-col-actions">Actions</th>
                     </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    <% } else { %>
-        <p>No sellers are currently pending approval.</p>
-    <% } %>
-
-    <script>
-        
-        function toggleDetails(id) {
-            const details = document.getElementById(`details-${id}`);
-            details.style.display = details.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function confirmAction(sellerId, action) {
-        const confirmation = confirm(
-        `Are you sure you want to ${action} this seller?`
-        );
-        if (confirmation) {
-        fetch(`/admin/seller-approval/${sellerId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-            if (data.success) {
-                alert(`${action === 'approve' ? 'Approved' : 'Rejected'} successfully!`);
-                location.reload();
-            } else {
-                alert('An error occurred. Please try again.');
-            }
-            })
-            .catch(() =>
-            alert('Error connecting to server. Please try again later.')
-            );
-        }
-    }
-    </script>
+                </thead>
+                <tbody>
+                    <% pendingSellers.forEach(seller => { %>
+                        <tr class="seller-approval-row" onclick="toggleSellerDetails('<%= seller.seller_id %>')">
+                            <td><strong><%= seller.name %></strong></td>
+                            <td>
+                                <button class="seller-approval-btn-approve" onclick="handleSellerAction('<%= seller.seller_id %>', 'approve')">Approve</button>
+                                <button class="seller-approval-btn-reject" onclick="handleSellerAction('<%= seller.seller_id %>', 'reject')">Reject</button>
+                            </td>
+                        </tr>
+                        <!-- Hidden Details Row -->
+                        <tr id="details-row-<%= seller.seller_id %>" class="seller-approval-details-row" style="display: none;">
+                            <td colspan="2">
+                                <div class="seller-approval-details">
+                                    <ul>
+                                        <li><strong>Contact:</strong> <%= seller.contact_info %></li>
+                                        <li><strong>Email:</strong> <%= seller.user ? seller.user.username : 'N/A' %></li>
+                                        <li><strong>Address:</strong> <%= seller.address %></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p class="seller-approval-no-sellers">No pending sellers at the moment.</p>
+        <% } %>
+    </main>
 </body>
 </html>
-
-
-

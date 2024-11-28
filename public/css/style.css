@@ -433,3 +433,113 @@ border-radius: 10px;
   max-width: 450px;
   border-radius: 10px;
 }
+
+
+/* //////////////////////////////////////////////////////////////////////// */
+/*                      ADMIN: SELLER APPROVAL PAGE                         */
+/* //////////////////////////////////////////////////////////////////////// */
+
+
+
+/* General Table Styling */
+.seller-approval-table {
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Table Header Styling */
+.seller-approval-table th {
+  background-color: #444; /* Dark Gray Header */
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-size: 16px;
+}
+
+.seller-approval-table th.seller-approval-col-name {
+  width: 70%;
+}
+
+.seller-approval-table th.seller-approval-col-actions {
+  width: 30%;
+}
+
+/* Table Rows Styling */
+.seller-approval-table td {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+
+/* Styling for Seller Rows */
+.seller-approval-row {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.seller-approval-row:hover {
+  background-color: #f1f1f1;
+}
+
+/* Hidden Seller Details Row (For Dropdown) */
+.seller-approval-details-row {
+  background-color: #f9f9f9;
+  transition: all 0.3s ease-in-out;
+}
+
+.seller-approval-details {
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Buttons Styling */
+.seller-approval-btn-approve,
+.seller-approval-btn-reject {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  margin-right: 10px;
+}
+
+.seller-approval-btn-approve {
+  background-color: #28a745; /* Green Button */
+}
+
+.seller-approval-btn-approve:hover {
+  background-color: #218838;
+}
+
+.seller-approval-btn-reject {
+  background-color: #dc3545; /* Red Button */
+}
+
+.seller-approval-btn-reject:hover {
+  background-color: #c82333;
+}
+
+/* Centered Message for No Sellers */
+.seller-approval-no-sellers {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+  margin-top: 30px;
+}
+
+/* Title Styling */
+.seller-approval-title {
+  text-align: center;
+  font-size: 24px;
+  margin-top: 20px;
+  color: #333;
+}
