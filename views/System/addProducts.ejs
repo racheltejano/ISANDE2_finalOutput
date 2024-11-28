@@ -101,6 +101,113 @@
       object-fit: cover;
     }
   </style>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .form-container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .image-upload-section {
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      background-color: #f5f5f5;
+    }
+
+    .image-upload-section input[type="file"] {
+      display: none;
+    }
+
+    .image-preview-wrapper {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .image-preview {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .image-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-preview .remove-image {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: #ff4444;
+      color: #fff;
+      font-size: 12px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .upload-btn {
+      display: inline-block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      color: #fff;
+      background-color: #4caf50;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .upload-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -156,22 +263,29 @@
          <!-- Hidden input to store attributes JSON -->
         <input type="hidden" id="attributes-json" name="attributes" />
 
+         <!-- Image Upload Section -->
+         <div class="form-container">
+          <h1>Upload Product Images</h1>
+          <div class="image-upload-section">
+            <p>Click to upload images (Only .jpg or .png)</p>
+            <input type="file" id="imageInput" name="images" accept=".jpg,.jpeg,.png" multiple />
+            <button class="upload-btn" type="button" onclick="document.getElementById('imageInput').click();">Upload Images</button>
+            <div id="imagePreviewContainer" class="image-preview-wrapper"></div>
+          </div>
+        </div>
 
         <!-- Submit Button -->
         <button type="submit" id="product-form">Add Product</button>
 
       </form>
     </div>
-
-   <!-- Image Upload Section (Partial) -->
-   <div class="image-upload-container">
-    <%- include('../partials/imageUploadForm') %>
-  </div>
   </div>
 
   <script>
     const categorySelect = document.getElementById('category_id');
     const dynamicFields = document.getElementById('dynamicFields');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
 
     const dynamicInputs = {
   1: [ // Clothing
@@ -227,79 +341,145 @@
 };
 
 
-categorySelect.addEventListener('change', () => {
-  const selectedCategory = categorySelect.value;
-  dynamicFields.innerHTML = '';  
+    categorySelect.addEventListener('change', () => {
+      const selectedCategory = categorySelect.value;
+      dynamicFields.innerHTML = '';  
 
-  if (dynamicInputs[selectedCategory]) {
-    dynamicInputs[selectedCategory].forEach(field => {
-      const group = document.createElement('div');
-      group.className = 'form-group';
+      if (dynamicInputs[selectedCategory]) {
+        dynamicInputs[selectedCategory].forEach(field => {
+          const group = document.createElement('div');
+          group.className = 'form-group';
 
-      const label = document.createElement('label');
-      label.textContent = field.label;
-      group.appendChild(label);
+          const label = document.createElement('label');
+          label.textContent = field.label;
+          group.appendChild(label);
 
-      let inputElement;
+          let inputElement;
 
-      if (field.type === 'select') {
-        // Create select input for 'select' type fields
-        const select = document.createElement('select');
-        select.name = `attribute_${field.name}`;
-        select.required = true;
+          if (field.type === 'select') {
+            // Create select input for 'select' type fields
+            const select = document.createElement('select');
+            select.name = `attribute_${field.name}`;
+            select.required = true;
 
-        field.options.forEach(option => {
-          const opt = document.createElement('option');
-          opt.value = option;
-          opt.textContent = option;
-          select.appendChild(opt);
+            field.options.forEach(option => {
+              const opt = document.createElement('option');
+              opt.value = option;
+              opt.textContent = option;
+              select.appendChild(opt);
+            });
+
+            // Add the 'attribute' class and the 'data-id' to the select element
+            select.classList.add('attribute');
+            select.setAttribute('data-id', field.attribute_id); // Add the attribute_id as data-id
+            inputElement = select;
+          } else {
+            // Create input or textarea for other types
+            const input = document.createElement(field.type === 'textarea' ? 'textarea' : 'input');
+            input.type = field.type;
+            input.name = `attribute_${field.name}`;
+            input.placeholder = field.placeholder;
+            input.required = true;
+
+            // Add the 'attribute' class to the input element
+            input.classList.add('attribute');
+            input.setAttribute('data-id', field.attribute_id); // Add the attribute_id as data-id
+            inputElement = input;
+          }
+
+          group.appendChild(inputElement);
+          dynamicFields.appendChild(group);
         });
-
-         // Add the 'attribute' class and the 'data-id' to the select element
-         select.classList.add('attribute');
-        select.setAttribute('data-id', field.attribute_id); // Add the attribute_id as data-id
-        inputElement = select;
-      } else {
-        // Create input or textarea for other types
-        const input = document.createElement(field.type === 'textarea' ? 'textarea' : 'input');
-        input.type = field.type;
-        input.name = `attribute_${field.name}`;
-        input.placeholder = field.placeholder;
-        input.required = true;
-
-        // Add the 'attribute' class to the input element
-        input.classList.add('attribute');
-        input.setAttribute('data-id', field.attribute_id); // Add the attribute_id as data-id
-        inputElement = input;
       }
-
-      group.appendChild(inputElement);
-      dynamicFields.appendChild(group);
     });
-  }
-});
 
+
+    imageInput.addEventListener('change', function () {
+      const files = imageInput.files;
+
+      Array.from(files).forEach((file) => {
+        if (!['image/jpeg', 'image/png'].includes(file.type)) {
+          alert(`${file.name} is not a valid image type.`);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const previewDiv = document.createElement('div');
+          previewDiv.classList.add('image-preview');
+
+          const img = document.createElement('img');
+          img.src = e.target.result;
+
+          const removeBtn = document.createElement('div');
+          removeBtn.classList.add('remove-image');
+          removeBtn.textContent = '✕';
+          removeBtn.addEventListener('click', () => {
+            previewDiv.remove();
+          });
+
+          previewDiv.appendChild(img);
+          previewDiv.appendChild(removeBtn);
+          imagePreviewContainer.appendChild(previewDiv);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    });
     document.getElementById('addProductForm').addEventListener('submit', function (event) {
 
-    event.preventDefault();
-    const attributes = [];
-    const attributeFields = document.querySelectorAll('.attribute');
+        event.preventDefault();
+        const attributes = [];
+        const attributeFields = document.querySelectorAll('.attribute');
 
-    attributeFields.forEach((field) => {
-      const attribute_id = field.getAttribute('data-id'); // Attribute ID from `data-id`
-      const value = field.value; // The user's input or selected value
-      if (value) {
-        attributes.push({ attribute_id: parseInt(attribute_id), value });
-      }
-    });
+        attributeFields.forEach((field) => {
+          const attribute_id = field.getAttribute('data-id'); // Attribute ID from `data-id`
+          const value = field.value; // The user's input or selected value
+          if (value) {
+            attributes.push({ attribute_id: parseInt(attribute_id), value });
+          }
+        });
 
-    // Set the JSON string in the hidden input
-    document.getElementById('attributes-json').value = JSON.stringify(attributes);
+        // Set the JSON string in the hidden input
+        document.getElementById('attributes-json').value = JSON.stringify(attributes);
 
-    // Submit the form
-    this.submit();
-  });
+        // Submit the form
+        this.submit();
+      });
 
+    Array.from(files).forEach((file) => {
+        // Validate file type
+        if (!['image/jpeg', 'image/png'].includes(file.type)) {
+          alert(`${file.name} is not a valid image type.`);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          // Create preview container
+          const previewDiv = document.createElement('div');
+          previewDiv.classList.add('image-preview');
+
+          // Create image element
+          const img = document.createElement('img');
+          img.src = e.target.result;
+
+          // Create remove button
+          const removeBtn = document.createElement('div');
+          removeBtn.classList.add('remove-image');
+          removeBtn.textContent = '✕';
+          removeBtn.addEventListener('click', () => {
+            previewDiv.remove();
+          });
+
+          // Append elements to preview container
+          previewDiv.appendChild(img);
+          previewDiv.appendChild(removeBtn);
+          imagePreviewContainer.appendChild(previewDiv);
+        };
+
+        reader.readAsDataURL(file);
+      });
   </script>
 </body>
 </html>
