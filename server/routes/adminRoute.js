@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const supabaseClient = require('../database/supabaseClient'); // Adjust path if necessary
-const { getPendingSellers, updateSellerApproval } = require('../controller/adminController');
-const { getPendingSellersCount } = require('../controller/adminController');
+const supabaseClient = require('../database/supabaseClient');
+const { getPendingSellers, updateSellerApproval, getInventory, getPendingSellersCount } = require('../controller/adminController');
+
 
 router.get('/dashboard', getPendingSellersCount, (req, res) => {
     res.render('System/admin/adminDashboard', {
         pendingSellersCount: req.pendingSellersCount, // Pass count to EJS
     });
 });
-
 
 router.get('/dashboard', async (req, res) => {
   try {
@@ -39,8 +38,11 @@ router.get('/dashboard', async (req, res) => {
 
 // GET route to render the admin seller approval page
 router.get('/seller-approval', getPendingSellers);
-
 // PUT route to handle approval or rejection of sellers
 router.put('/seller-action/:sellerId', updateSellerApproval);
+
+
+// Route to fetch inventory data (in-progress)
+router.get('/inventory', getInventory);
 
 module.exports = router;

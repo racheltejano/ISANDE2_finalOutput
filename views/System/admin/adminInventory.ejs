@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Inventory</title>
+  <link rel="stylesheet" href="/styles.css"> <!-- Optional CSS -->
+</head>
+<body>
+  <h1>Admin Inventory</h1>
+  <form action="/admin/inventory" method="get">
+    <select name="category" onchange="this.form.submit()">
+        <option value="">Select Category</option>
+        <% categories.forEach(category => { %>
+            <option value="<%= category.id %>"><%= category.name %></option>
+        <% }) %>
+    </select>
+</form>
+
+  <table border="1" cellspacing="0" cellpadding="10">
+    <thead>
+      <tr>
+        <% if (inventory.length > 0 && inventory[0].id) { %>
+          <th>Product ID</th>
+        <% } %>
+        <th>Item Name</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Seller</th>
+        <th>Category</th>
+        <th>Status</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% inventory.forEach(product => { %>
+        <tr>
+          <% if (product.id) { %>
+            <td><%= product.id %></td>
+          <% } %>
+          <td><%= product.name %></td>
+          <td>₱<%= product.price.toFixed(2) %></td>
+          <td><%= product.stock %></td>
+          <td><%= product.seller %></td>
+          <td><%= product.category %></td>
+          <td><%= product.status %></td>
+          <td>
+            <button onclick="toggleDetails('details-<%= product.id %>')">Details</button>
+            <div id="details-<%= product.id %>" class="details" style="display: none;">
+              <h4>Images</h4>
+              <ul>
+                <% product.images.forEach(image => { %>
+                  <li>
+                    <a href="<%= image.image_url %>" target="_blank">View Image</a>
+                  </li>
+                <% }); %>
+              </ul>
+              <h4>Attributes</h4>
+              <ul>
+                <% product.attributes.forEach(attr => { %>
+                  <li><%= attr.name %>: <%= attr.value %></li>
+                <% }); %>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <script>
+    function toggleDetails(id) {
+      const element = document.getElementById(id);
+      element.style.display = element.style.display === 'none' ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>

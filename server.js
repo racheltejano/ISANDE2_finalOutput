@@ -6,11 +6,8 @@ const PORT = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-
 // Middleware to serve static assets from the "public" directory
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware to parse incoming request bodies (for handling form data, JSON, etc.)
 app.use(express.urlencoded({ extended: true }));

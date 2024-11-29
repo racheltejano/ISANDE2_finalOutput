@@ -1,6 +1,5 @@
 const supabaseClient = require('../database/supabaseClient');
 
-
 // Function to get the count of pending sellers
 const getPendingSellersCount = async (req, res, next) => {
     try {
@@ -21,9 +20,6 @@ const getPendingSellersCount = async (req, res, next) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
-
-
 
 // Function to get pending sellers
 const getPendingSellers = async (req, res) => {
@@ -87,8 +83,65 @@ const updateSellerApproval = async (req, res) => {
     }
 };
 
+// Function to get Inventory
+const getInventory = async (req, res) => {
+    const categoryFilter = req.query.category;
+
+    try {
+        let query = supabaseClient.from('products').select(`
+            id,
+            name,
+            price,
+            stock,
+            seller: sellers (name),
+            category: categories (name),
+            status,
+            product_images: product_images (image_id, image_url),
+            product_attributes: product_attributes (
+                value,
+                attribute: attributes (name)
+            )
+        `);
+
+        if (categoryFilter) {
+            query = query.eq('category.id', categoryFilter); // Adjust based on your database structure
+        }
+
+        const { data: products, error } = await query;
+
+        if (error) throw error;
+
+        const inventory = products.map(product => ({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            stock: product.stock,
+            seller: product.seller.name,
+            category: product.category.name,
+            status: product.stock === 0 ? 'Out of Stock' : product.stock < 10 ? 'Low Stock' : 'In Stock',
+            images: product.product_images,
+            attributes: product.product_attributes.map(attr => ({
+                value: attr.value,
+                name: attr.attribute.name,
+            })),
+        }));
+
+        // Fetch categories for dropdown
+        const { data: categories } = await supabaseClient.from('categories').select('*');
+
+        res.render('System/admin/adminInventory', { inventory, categories });
+
+    } catch (err) {
+        console.error('Error fetching inventory data:', err); // Log the detailed error
+        res.status(500).send('Error fetching inventory data.');
+    }
+};
+
+
+
 module.exports = {
     getPendingSellersCount,
     getPendingSellers,
     updateSellerApproval,
+    getInventory
 };
