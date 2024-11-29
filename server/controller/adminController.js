@@ -1,5 +1,30 @@
 const supabaseClient = require('../database/supabaseClient');
 
+
+// Function to get the count of pending sellers
+const getPendingSellersCount = async (req, res, next) => {
+    try {
+        const { count, error } = await supabaseClient
+            .from('sellers')
+            .select('seller_id', { count: 'exact' }) // Use `seller_id` for this specific query
+            .eq('approval_status', false);
+
+        if (error) {
+            console.error('Error fetching pending sellers count:', error);
+            return res.status(500).json({ message: 'Failed to fetch pending sellers count' });
+        }
+
+        req.pendingSellersCount = count || 0; // Attach count to request object for the dashboard
+        next(); // Move to the next middleware or route handler
+    } catch (err) {
+        console.error('Unexpected error fetching pending sellers count:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+
+
 // Function to get pending sellers
 const getPendingSellers = async (req, res) => {
     try {
@@ -63,6 +88,7 @@ const updateSellerApproval = async (req, res) => {
 };
 
 module.exports = {
+    getPendingSellersCount,
     getPendingSellers,
     updateSellerApproval,
 };
