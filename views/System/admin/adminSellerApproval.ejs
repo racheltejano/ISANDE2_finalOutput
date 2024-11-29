@@ -22,7 +22,7 @@
             const confirmAction = confirm(`Are you sure you want to ${confirmationMessage} this seller?`);
             if (confirmAction) {
                 fetch(`/admin/seller-action/${sellerId}`, {
-                    method: 'POST',
+                    method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: actionType })
                 })
