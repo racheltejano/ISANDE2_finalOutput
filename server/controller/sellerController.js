@@ -1,9 +1,7 @@
 const supabase = require('../database/supabaseClient');
-const multer = require('multer');
+const cloudinary = require('../utils/cloudinary');
+const upload = require('../utils/multerConfig');
 
-// Multer setup for handling file uploads
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
 exports.uploadImages = upload.array('images');
 
 // Display the Add Product Page
@@ -46,28 +44,37 @@ exports.addProduct = async (req, res) => {
       }
     }
 
-    // Upload images
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        const uploadPath = `${product.product_id}/${file.originalname}`;
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('product_images') // Match bucket name exactly
-          .upload(uploadPath, file.buffer, {
-            contentType: file.mimetype,
-          });
+    // In your addProduct method:
+  if (req.files && req.files.length > 0) {
+    for (const file of req.files) {
+      try {
+        console.log(req.files);
+        // Upload the image to Cloudinary (use async/await instead of the callback)
+        const result = await cloudinary.uploader.upload(file.path, {
+          resource_type: 'auto', // Automatically detects file type (image, video, etc.)
+          public_id: `${product.product_id}/${file.originalname}`, // Use product_id to organize images
+        });
 
-        if (uploadError) throw new Error(`Image Upload Error: ${uploadError.message}`);
+        // Make sure the result contains a valid image URL
+        const imageUrl = result.secure_url;
 
-        // Insert image URL into the `product_images` table
-        const imageUrl = `${supabaseUrl}/storage/v1/object/public/product_images/${uploadPath}`;
+        if (!imageUrl) {
+          throw new Error('Failed to get image URL from Cloudinary.');
+        }
+
+        // Insert image URL into the `product_images` table in Supabase
         const { error: imageInsertError } = await supabase.from('product_images').insert({
           product_id: product.product_id,
           image_url: imageUrl,
         });
 
         if (imageInsertError) throw new Error(`Image Insert Error: ${imageInsertError.message}`);
+      } catch (err) {
+        console.error('Error uploading image to Cloudinary:', err.message);
+        throw new Error('Error uploading image');
       }
     }
+  }
 
     res.redirect('/seller/add-Product');
   } catch (err) {

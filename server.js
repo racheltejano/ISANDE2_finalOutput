@@ -64,7 +64,7 @@ app.use('/websiteLogin', websiteLoginRoute);
 
 //Route for Admin Account (System)
 const adminRoute = require('./server/routes/adminRoute');
-app.use('/admin', adminRoute);
+app.use('/admin', protectRoute, adminRoute);
 
 
 // Route for Sellers (Add Product functionality, dashboard, etc.)
