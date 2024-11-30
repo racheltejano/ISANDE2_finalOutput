@@ -83,51 +83,71 @@ const updateSellerApproval = async (req, res) => {
     }
 };
 
-// Function to get Inventory
+/* Fetch Inventory Functions */
+// Function to fetch products
+const fetchProducts = async (categoryFilter) => {
+    let query = supabaseClient.from('products').select(`
+        product_id,
+        name,
+        price,
+        stock,
+        seller: sellers (name),
+        category: categories (category_name),
+        status,
+        product_images: product_images (image_id, image_url),
+        product_attributes: product_attributes (
+            value,
+            attribute: attributes (attribute_name)
+        )
+    `);
+
+    if (categoryFilter) {
+        query = query.eq('category_id', categoryFilter);
+    }
+
+    const { data: products, error } = await query;
+
+    if (error) {
+        console.error('Error fetching products:', error);
+        throw error;
+    }
+
+    return products;
+};
+
+// Function to format the inventory
+const formatInventory = (products) => {
+    return products.map(product => ({
+        id: product.product_id,
+        name: product.name,
+        price: product.price,
+        stock: product.stock,
+        seller: product.seller.name,
+        category: product.category.category_name,
+        status: product.stock === 0 ? 'Out of Stock' : product.stock < 10 ? 'Low Stock' : 'In Stock',
+        images: product.product_images,
+        attributes: product.product_attributes.map(attr => ({
+            value: attr.value,
+            name: attr.attribute.name,
+        })),
+    }));
+};
+
+// Function to fetch categories
+const fetchCategories = async () => {
+    const { data: categories, error } = await supabaseClient.from('categories').select('*');
+    if (error) throw error; // Handle potential error fetching categories
+    return categories;
+};
+
+// Main function to get Inventory
 const getInventory = async (req, res) => {
     const categoryFilter = req.query.category;
 
     try {
-        let query = supabaseClient.from('products').select(`
-            id,
-            name,
-            price,
-            stock,
-            seller: sellers (name),
-            category: categories (name),
-            status,
-            product_images: product_images (image_id, image_url),
-            product_attributes: product_attributes (
-                value,
-                attribute: attributes (name)
-            )
-        `);
-
-        if (categoryFilter) {
-            query = query.eq('category.id', categoryFilter); // Adjust based on your database structure
-        }
-
-        const { data: products, error } = await query;
-
-        if (error) throw error;
-
-        const inventory = products.map(product => ({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            stock: product.stock,
-            seller: product.seller.name,
-            category: product.category.name,
-            status: product.stock === 0 ? 'Out of Stock' : product.stock < 10 ? 'Low Stock' : 'In Stock',
-            images: product.product_images,
-            attributes: product.product_attributes.map(attr => ({
-                value: attr.value,
-                name: attr.attribute.name,
-            })),
-        }));
-
-        // Fetch categories for dropdown
-        const { data: categories } = await supabaseClient.from('categories').select('*');
+        const products = await fetchProducts(categoryFilter);
+        const inventory = formatInventory(products);
+        const categories = await fetchCategories();
 
         res.render('System/admin/adminInventory', { inventory, categories });
 
@@ -136,8 +156,6 @@ const getInventory = async (req, res) => {
         res.status(500).send('Error fetching inventory data.');
     }
 };
-
-
 
 module.exports = {
     getPendingSellersCount,
