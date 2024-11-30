@@ -92,7 +92,7 @@ const fetchProducts = async (categoryFilter) => {
         price,
         stock,
         seller: sellers (name),
-        category: categories (category_name),
+        category: categories (category_id, category_name),
         status,
         product_images: product_images (image_id, image_url),
         product_attributes: product_attributes (
@@ -124,6 +124,7 @@ const formatInventory = (products) => {
         stock: product.stock,
         seller: product.seller.name,
         category: product.category.category_name,
+        category: product.category.category_id,
         status: product.stock === 0 ? 'Out of Stock' : product.stock < 10 ? 'Low Stock' : 'In Stock',
         images: product.product_images,
         attributes: product.product_attributes.map(attr => ({
