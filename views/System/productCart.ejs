@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Merge borders */
+            margin-bottom: 20px; /* Add space below the table */
+        }
+        th, td {
+            border: 1px solid #ddd; /* Add borders to cells */
+            padding: 12px; /* Add padding for better spacing */
+            text-align: left; /* Align text to the left */
+        }
+        th {
+            background-color: #f2f2f2; /* Light gray background for headers */
+        }
+        .totals {
+            margin-top: 20px; /* Add space above totals */
+            text-align: left; /* Align totals to the left */
+        }
+        .totals-item {
+            margin-bottom: 10px; /* Add space between totals */
+            display: flex; /* Use flexbox for alignment */
+            justify-content: space-between; /* Space between label and value */
+        }
+        .totals-value {
+            text-align: right; /* Align values to the right */
+            flex: 1; /* Allow the value to take available space */
+        }
+    </style>
+</head>
+<body>
+    <h1>Shopping Cart</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Remove</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="product">
+                <td class="product-details">MG GUNDAM RX-78-2</td>
+                <td class="product-price">5000.00</td>
+                <td class="product-quantity">
+                    <input type="number" value="2" min="1">
+                </td>
+                <td class="product-removal">
+                    <button class="remove-product">Remove</button>
+                </td>
+                <td class="product-line-price">25.98</td>
+            </tr>
+            <tr class="product">
+                <td class="product-details">HG SAZABI</td>
+                <td class="product-price">1700.00</td>
+                <td class="product-quantity">
+                    <input type="number" value="1" min="1">
+                </td>
+                <td class="product-removal">
+                    <button class="remove-product">Remove</button>
+                </td>
+                <td class="product-line-price">45.99</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="totals">
+        <div class="totals-item">
+            <label>Subtotal:</label>
+            <div class="totals-value" id="cart-subtotal">10000.00</div>
+        </div>
+        <div class="totals-item">
+            <label>Shipping:</label>
+            <div class="totals-value" id="cart-shipping">1700.00</div>
+        </div>
+        <div class="totals-item totals-item-total">
+            <label>Grand Total:</label>
+            <div class="totals-value" id="cart-total">86.97</div>
+        </div>
+    </div>
+
+    <button>Checkout</button>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        /* Set rates + misc */
+        var shippingRate = 15.00; 
+        var fadeTime = 300;
+
+        /* Assign actions */
+        $('.product-quantity input').change(function() {
+            updateQuantity(this);
+        });
+
+        $('.product-removal button'). click(function() {
+            removeItem(this);
+        });
+
+        /* Recalculate cart */
+        function recalculateCart() {
+            var subtotal = 0;
+
+            /* Sum up row totals */
+            $('.product').each(function() {
+                subtotal += parseFloat($(this).children('.product-line-price').text());
+            });
+
+            /* Calculate totals */
+            var shipping = (subtotal > 0 ? shippingRate : 0);
+            var total = subtotal + shipping;
+
+            /* Update totals display */
+            $('.totals-value').fadeOut(fadeTime, function() {
+                $('#cart-subtotal').html(subtotal.toFixed(2));
+                $('#cart-shipping').html(shipping.toFixed(2));
+                $('#cart-total').html(total.toFixed(2));
+                if (total == 0) {
+                    $('.checkout').fadeOut(fadeTime);
+                } else {
+                    $('.checkout').fadeIn(fadeTime);
+                }
+                $('.totals-value').fadeIn(fadeTime);
+            });
+        }
+
+        /* Update quantity */
+        function updateQuantity(quantityInput) {
+            /* Calculate line price */
+            var productRow = $(quantityInput).closest('tr');
+            var price = parseFloat(productRow.children('.product-price').text());
+            var quantity = $(quantityInput).val();
+            var linePrice = price * quantity;
+
+            /* Update line price display */
+            productRow.children('.product-line-price').html(linePrice.toFixed(2));
+            recalculateCart();
+        }
+
+        /* Remove item from cart */
+        function removeItem(removeButton) {
+            var productRow = $(removeButton).closest('tr');
+            productRow.fadeOut(fadeTime, function() {
+                productRow.remove();
+                recalculateCart();
+            });
+        }
+    </script>
+</body>
+</html>

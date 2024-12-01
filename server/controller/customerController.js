@@ -86,3 +86,12 @@ exports.getProductDetailsPage = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+/* GET Request for cart */
+exports.getProductCartPage = async (req, res) => {
+  let { data: cart, error } = await supabase
+    .from('cart')
+    .select('*')
+    .single()
+  return res.render('System/productCart', { cart: cart });
+}
