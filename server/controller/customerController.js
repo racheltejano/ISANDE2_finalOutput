@@ -88,9 +88,89 @@ exports.getProductDetailsPage = async (req, res) => {
 };
 
 /* GET Request for cart */
-exports.getProductCartPage = async (req, res) => {
-  return res.render('System/productCart');
+// Function to fetch customer details from Supabase
+const fetchCustomerDetails = async (user_id) => {
+  try {
+    const { data, error } = await supabase
+      .from('customers')
+      .select('*')
+      .eq('user_id', user_id)
+      .single(); // Use .single() to get a single record
+
+    // Handle any errors from Supabase
+    if (error) {
+      console.error('Error fetching customer details:', error);
+      throw new Error('Error fetching customer details'); // Throw an error to be caught in the calling function
+    }
+
+    return data; // Return the customer data
+  } catch (err) {
+    console.error('Unexpected error in fetchCustomerDetails:', err);
+    throw err; // Re-throw the error to be handled in the calling function
+  }
+};
+
+const fetchPaymentMethods = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('payment_methods')
+      .select('*')
+
+    // Handle any errors from Supabase
+    if (error) {
+      console.error('Error fetching payment methods:', error);
+      throw new Error('Error fetching payment methods'); // Throw an error to be caught in the calling function
+    }
+
+    return data; // Return the customer data
+  } catch (err) {
+    console.error('Unexpected error in fetchPaymentMethods:', err);
+    throw err; // Re-throw the error to be handled in the calling function
+  }
 }
+
+const fetchShippingMethods = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('shipping_methods')
+      .select('*')
+
+    // Handle any errors from Supabase
+    if (error) {
+      console.error('Error fetching shipping methods:', error);
+      throw new Error('Error fetching payment methods'); // Throw an error to be caught in the calling function
+    }
+
+    return data; // Return the customer data
+  } catch (err) {
+    console.error('Unexpected error in fetchShippingMethods:', err);
+    throw err; // Re-throw the error to be handled in the calling function
+  }
+}
+
+// GET Request for cart
+exports.getProductCartPage = async (req, res) => {
+  try {
+    // For testing purposes, using a hardcoded user_id
+    const user_id = 'b93958ce-fb10-4c62-a2a0-84f764a1dcbf'; // Replace with req.session.user?.user_id in production
+
+    // Check if user_id is available
+    if (!user_id) {
+      return res.status(401).send('User  not authenticated'); // Send an error if user is not authenticated
+    }
+
+    const customer = await fetchCustomerDetails(user_id);
+    const payment_method = await fetchPaymentMethods();
+    const shipping_methods = await fetchShippingMethods();
+
+    // Render the product cart page, passing the customer data
+    return res.render('System/productCart', { customer, payment_method, shipping_methods });
+
+  } catch (err) {
+    console.error('Unexpected error in getProductCartPage:', err);
+    return res.status(500).send('Server Error'); // Catch any unexpected errors
+  }
+};
 
 exports.getProductsByID = async (req, res) => {
   const productId = req.params.id;

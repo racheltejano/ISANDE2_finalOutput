@@ -12,9 +12,9 @@
 
     <h2><i class='bx bxs-location-plus'></i> Shipping Details</h2>
     <div class="customer-details">
-        <input type="text" placeholder="Full Name" value="John Doe">
-        <input type="text" placeholder="Address" value="123 Main St, City, Country">
-        <input type="text" placeholder="Phone Number" value="+1 234 567 890">
+      <input type="text" placeholder="Full Name" value="<%= customer.name %>">
+      <input type="text" placeholder="Address" value="<%= customer.address %>">
+      <input type="text" placeholder="Phone Number" value="<%= customer.contact_info %>">
     </div>
     <br />
     <table>
@@ -36,21 +36,20 @@
     <h2><i class='bx bxs-truck' ></i> Shipping</h2>
     <div class="shipping-payment">
         <label for="shipping-method">Shipping Method:</label>
-        <select id="shipping-method">
-            <option value=" Standard Shipping">Standard Shipping</option>
-            <option value="Express Shipping">Express Shipping</option>
-            <option value="Next Day Delivery">Next Day Delivery</option>
+        <select id="shipping-method" name="shipping_method">
+            <% shipping_methods.forEach(method => { %>
+                <option value="<%= method.id %>"><%= method.name %></option>
+            <% }); %>
         </select>
-        
     </div>
     <br />
     <h2><i class='bx bxs-credit-card' ></i> Payment Methods</h2>
     <div class="shipping-payment">
         <label for="payment-method">Payment Method:</label>
-        <select id="payment-method">
-            <option value="Credit Card">Credit Card</option>
-            <option value="PayPal">PayPal</option>
-            <option value="Bank Transfer">Bank Transfer</option>
+        <select id="payment-method" name="payment_method">
+            <% payment_method.forEach(method => { %>
+                <option value="<%= method.id %>"><%= method.name %></option>
+            <% }); %>
         </select>
     </div>
     <br />
