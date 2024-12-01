@@ -1,0 +1,91 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* Light background */
+    margin-left: 28vh;
+    margin-right: 28vh
+}
+h1 {
+    color: #333333; /* Darker text for the heading */
+    text-align: center;
+    margin-bottom: 20px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Prevent overflow from rounded corners */
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+th {
+    background-color: #333333; /* Primary color for headers */
+    color: white; /* White text for contrast */
+}
+tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+}
+.totals {
+    margin-top: 20px;
+    text-align: left;
+    background-color: #ffffff; /* White background for totals */
+    padding: 15px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.totals-item {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+.totals-value {
+    text-align: right;
+    flex: 1;
+    font-weight: bold; /* Bold for emphasis */
+    color: #333333; /* Use primary color for totals */
+}
+.checkout {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #333333; /* Primary color for checkout button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition */
+}
+.checkout:hover {
+    background-color: #555555; /* Darker shade on hover */
+}
+input[type="number"], input[type="text"], select {
+    width: 100%; /* Full width for inputs */
+    padding: 10px; /* Padding for inputs */
+    margin: 5px 0; /* Margin for inputs */
+    border: 1px solid #ddd; /* Border for inputs */
+    border-radius: 5px; /* Rounded corners */
+}
+.product-removal button {
+    background-color: #dc3545; /* Bootstrap danger color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition */
+}
+.product-removal button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+.customer-details, .shipping-payment {
+    background-color: #ffffff; /* White background for details */
+    padding: 15px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Space between sections */
+}

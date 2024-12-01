@@ -4,93 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa; /* Light background */
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            color: #333333; /* Darker text for the heading */
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
-            border-radius: 8px; /* Rounded corners */
-            overflow: hidden; /* Prevent overflow from rounded corners */
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #333333; /* Primary color for headers */
-            color: white; /* White text for contrast */
-        }
-        tr:hover {
-            background-color: #f1f1f1; /* Highlight row on hover */
-        }
-        .totals {
-            margin-top: 20px;
-            text-align: left;
-            background-color: #ffffff; /* White background for totals */
-            padding: 15px;
-            border-radius: 8px; /* Rounded corners */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .totals-item {
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .totals-value {
-            text-align: right;
-            flex: 1;
-            font-weight: bold; /* Bold for emphasis */
-            color: #333333; /* Use primary color for totals */
-        }
-        .checkout {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background-color: #333333; /* Primary color for checkout button */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s; /* Smooth transition */
-        }
-        .checkout:hover {
-            background-color: #555555; /* Darker shade on hover */
-        }
-        input[type="number"] {
-            width: 60px; /* Fixed width for quantity input */
-            text-align: center; /* Center text */
-        }
-        .product-removal button {
-            background-color: #dc3545; /* Bootstrap danger color */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 5px 10px;
-            cursor: pointer;
-            transition: background-color 0.3s; /* Smooth transition */
-        }
-        .product-removal button:hover {
-            background-color: #c82333; /* Darker red on hover */
-        }
-    </style>
+    <link rel="stylesheet" href="/css/productCartCSS.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
     <h1>Shopping Cart</h1>
+
+    <h2><i class='bx bxs-location-plus'></i> Shipping Details</h2>
+    <div class="customer-details">
+        <input type="text" placeholder="Full Name" value="John Doe">
+        <input type="text" placeholder="Address" value="123 Main St, City, Country">
+        <input type="text" placeholder="Phone Number" value="+1 234 567 890">
+    </div>
+    <br />
     <table>
+        <h2><i class='bx bxs-package'></i> Products</h2>
         <thead>
             <tr>
                 <th>Product</th>
@@ -104,7 +32,29 @@
             <!-- Product rows will be dynamically inserted here -->
         </tbody>
     </table>
-
+    <br />
+    <h2><i class='bx bxs-truck' ></i> Shipping</h2>
+    <div class="shipping-payment">
+        <label for="shipping-method">Shipping Method:</label>
+        <select id="shipping-method">
+            <option value=" Standard Shipping">Standard Shipping</option>
+            <option value="Express Shipping">Express Shipping</option>
+            <option value="Next Day Delivery">Next Day Delivery</option>
+        </select>
+        
+    </div>
+    <br />
+    <h2><i class='bx bxs-credit-card' ></i> Payment Methods</h2>
+    <div class="shipping-payment">
+        <label for="payment-method">Payment Method:</label>
+        <select id="payment-method">
+            <option value="Credit Card">Credit Card</option>
+            <option value="PayPal">PayPal</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+        </select>
+    </div>
+    <br />
+    <h2><i class='bx bx-money-withdraw' ></i> Payment Details</h2>
     <div class="totals">
         <div class="totals-item">
             <label>Subtotal:</label>
@@ -211,7 +161,7 @@
                                 <td class="product-details">${product.name}</td>
                                 <td class="product-price">${product.price.toFixed(2)}</td>
                                 <td class="product-quantity">
-                                    <input type="number" value="${item.quantity}" min="1">
+                                    <input type="number" value ="${item.quantity}" min="1">
                                 </td>
                                 <td class="product-removal">
                                     <button class="remove-product">Remove</button>
