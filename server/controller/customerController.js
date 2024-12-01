@@ -205,3 +205,49 @@ exports.getProductsByID = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+exports.postCart = async (req, res) => {
+  try {
+    // Destructure the necessary fields from the request body
+    const {
+      customer_id,
+      total_amount,
+      payment_method,
+      method_id,
+    } = req.body;
+
+    // Validate input
+    if (!customer_id || !total_amount || !payment_method || !method_id) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Set the initial status ID (assuming 1 is for a new order)
+    const status_id = 1;
+
+    // Insert the new order into the 'orders' table
+    const { data, error } = await supabase
+      .from('orders')
+      .insert([
+        {
+          customer_id,
+          total_amount,
+          payment_method,
+          method_id,
+          status_id,
+        },
+      ])
+      .select();
+
+    // Handle any errors from Supabase
+    if (error) {
+      console.error('Error inserting order:', error);
+      return res.status(500).json({ error: 'Error creating order' });
+    }
+
+    // Return the newly created order data
+    return res.status(201).json({ order: data });
+  } catch (err) {
+    console.error('Unexpected error in postCart:', err);
+    return res.status(500).json({ error: 'Server Error' });
+  }
+};
