@@ -83,19 +83,6 @@ const updateSellerApproval = async (req, res) => {
     }
 };
 
-/* Fetch Inventory Functions */
-const fetchSellers = async () => {
-    const { data: sellers, error } = await supabaseClient
-        .from('sellers')
-        .select('seller_id, name'); // Adjust field names based on your table structure
-
-    if (error) {
-        console.error('Error fetching sellers:', error);
-        throw error;
-    }
-
-    return sellers;
-};
 
 
 // Function to fetch products
@@ -105,7 +92,7 @@ const fetchProducts = async (categoryFilter, sellerFilter, viewFilter) => {
         name,
         price,
         stock,
-        seller: sellers (name),
+        seller: sellers (name, seller_id),
         category: categories (category_id, category_name),
         status,
         product_images: product_images (image_id, image_url),
@@ -115,13 +102,14 @@ const fetchProducts = async (categoryFilter, sellerFilter, viewFilter) => {
         )
     `);
 
-    if (categoryFilter) {
+    if (categoryFilter && categoryFilter !== 'all') {
         query = query.eq('category_id', categoryFilter);
     }
 
     // Apply seller filter
-    if (sellerFilter) {
-        query = query.eq('seller.id', sellerFilter);
+    if (sellerFilter && sellerFilter !== 'all') {
+        console.log(`Filtering by seller_id: ${sellerFilter}`);
+        query = query.eq('seller_id', sellerFilter);  // Ensure 'seller_id' is the correct column name
     }
 
     // Apply view filter (e.g., in-stock or out-of-stock products)
@@ -152,7 +140,6 @@ const formatInventory = (products) => {
         stock: product.stock,
         seller: product.seller.name,
         category: product.category.category_name,
-        category: product.category.category_id,
         status: product.stock === 0 ? 'Out of Stock' : product.stock < 10 ? 'Low Stock' : 'In Stock',
         images: product.product_images,
         attributes: product.product_attributes.map(attr => ({
@@ -165,12 +152,30 @@ const formatInventory = (products) => {
 // Function to fetch categories
 const fetchCategories = async () => {
     const { data: categories, error } = await supabaseClient.from('categories').select('*');
-    if (error) throw error; // Handle potential error fetching categories
-    return categories;
+    if (error) throw error; 
+    const allCategoriesOption = { category_id: 'all', category_name: 'All Categories' };
+    return [allCategoriesOption, ...categories];
+};
+
+/* Fetch Inventory Functions */
+const fetchSellers = async () => {
+    const { data: sellers, error } = await supabaseClient
+        .from('sellers')
+        .select('seller_id, name, approval_status') 
+        .eq('approval_status', true);  // Only fetch sellers with approval status true
+
+    if (error) {
+        console.error('Error fetching sellers:', error);
+        throw error;
+    }
+
+    const allSellersOption = { seller_id: 'all', name: 'All Sellers' };
+    return [allSellersOption, ...sellers];
 };
 
 // Main function to get Inventory
 const getInventory = async (req, res) => {
+    console.log(req.query);
     const categoryFilter = req.query.category;
     const sellerFilter = req.query.seller;
     const viewFilter = req.query.view;
