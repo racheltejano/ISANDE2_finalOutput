@@ -68,14 +68,9 @@ app.use('/admin', protectRoute, adminRoute);
 const sellerRoute = require('./server/routes/sellerRoute');
 app.use('/seller', protectRoute, sellerRoute);
 
-
-
-
-
-
 //Route for Customer Account (Website)
-//const customerRoute = require('./server/routes/customerRoute'); 
-//app.use('/customer', customerRoute); 
+const customerRoute = require('./server/routes/customerRoute'); 
+app.use('/customer', customerRoute); 
 
 
 
