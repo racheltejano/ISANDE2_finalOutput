@@ -89,9 +89,39 @@ exports.getProductDetailsPage = async (req, res) => {
 
 /* GET Request for cart */
 exports.getProductCartPage = async (req, res) => {
-  let { data: cart, error } = await supabase
-    .from('cart')
-    .select('*')
-    .single()
-  return res.render('System/productCart', { cart: cart });
+  return res.render('System/productCart');
 }
+
+exports.getProductsByID = async (req, res) => {
+  const productId = req.params.id;
+
+  // Validate productId (assuming it's a number, you can adjust based on your needs)
+  if (!productId || isNaN(productId)) {
+    return res.status(400).json({ message: 'Invalid product ID' });
+  }
+
+  try {
+    const { data: product, error } = await supabase
+      .from('products')
+      .select('*') // Select all fields, or specify fields you need
+      .eq('product_id', productId)
+      .single();
+
+    // Handle error from Supabase
+    if (error) {
+      console.error('Error fetching product:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+
+    // Handle case where no product is found
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Return the product data with a 200 status
+    return res.status(200).json(product);
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};

@@ -51,47 +51,26 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="product">
-                <td class="product-details">MG GUNDAM RX-78-2</td>
-                <td class="product-price">5000.00</td>
-                <td class="product-quantity">
-                    <input type="number" value="2" min="1">
-                </td>
-                <td class="product-removal">
-                    <button class="remove-product">Remove</button>
-                </td>
-                <td class="product-line-price">25.98</td>
-            </tr>
-            <tr class="product">
-                <td class="product-details">HG SAZABI</td>
-                <td class="product-price">1700.00</td>
-                <td class="product-quantity">
-                    <input type="number" value="1" min="1">
-                </td>
-                <td class="product-removal">
-                    <button class="remove-product">Remove</button>
-                </td>
-                <td class="product-line-price">45.99</td>
-            </tr>
+            <!-- Product rows will be dynamically inserted here -->
         </tbody>
     </table>
 
     <div class="totals">
         <div class="totals-item">
             <label>Subtotal:</label>
-            <div class="totals-value" id="cart-subtotal">10000.00</div>
+            <div class="totals-value" id="cart-subtotal">0.00</div>
         </div>
         <div class="totals-item">
             <label>Shipping:</label>
-            <div class="totals-value" id="cart-shipping">1700.00</div>
+            <div class="totals-value" id="cart-shipping">0.00</div>
         </div>
         <div class="totals-item totals-item-total">
             <label>Grand Total:</label>
-            <div class="totals-value" id="cart-total">86.97</div>
+            <div class="totals-value" id="cart-total">0.00</div>
         </div>
     </div>
 
-    <button>Checkout</button>
+    <button class="checkout">Checkout</button>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -100,11 +79,11 @@
         var fadeTime = 300;
 
         /* Assign actions */
-        $('.product-quantity input').change(function() {
+        $(document).on('change', '.product-quantity input', function() {
             updateQuantity(this);
         });
 
-        $('.product-removal button'). click(function() {
+        $(document).on('click', '.product-removal button', function() {
             removeItem(this);
         });
 
@@ -156,6 +135,57 @@
                 recalculateCart();
             });
         }
+
+        // Function to show cart contents and fetch product details
+        async function showCart() {
+            const cartString = sessionStorage.getItem('cart');
+            if (cartString) {
+                const cart = JSON.parse(cartString);
+                console.log('Cart contents:', cart);
+                
+                // Clear current table body
+                $('tbody').empty();
+
+                // Fetch product details for each item in the cart
+                for (const item of cart) {
+                    try {
+                        const response = await fetch(`/customer/product-cart/product/${item.id}`);
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        const product = await response.json();
+                        
+                        // Create a new row in the table
+                        const newRow = `
+                            <tr class="product">
+                                <td class="product-details">${product.name}</td>
+                                <td class="product-price">${product.price.toFixed(2)}</td>
+                                <td class="product-quantity">
+                                    <input type="number" value="${item.quantity}" min="1">
+                                </td>
+                                <td class="product-removal">
+                                    <button class="remove-product">Remove</button>
+                                </td>
+                                <td class="product-line-price">${(product.price * item.quantity).toFixed(2)}</td>
+                            </tr>
+                        `;
+                        $('tbody').append(newRow);
+                    } catch (error) {
+                        console.error('Error fetching product:', error);
+                    }
+                }
+
+                // Recalculate the cart totals after rendering products
+                recalculateCart();
+            } else {
+                console.log('No cart found in session storage.');
+            }
+        }
+
+        // Call showCart on page load or when needed
+        $(document).ready(function() {
+            showCart();
+        });
     </script>
 </body>
 </html>

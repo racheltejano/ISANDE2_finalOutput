@@ -6,6 +6,8 @@ const customerController = require('../controller/customerController');
 // The ':id' in the route is a route parameter that will capture the product ID from the URL
 router.get('/product-details/:id', customerController.getProductDetailsPage);
 
-router.get('/product-cart', customerController.getProductCartPage)
+router.get('/product-cart', customerController.getProductCartPage);
+
+router.get('/product-cart/product/:id', customerController.getProductsByID);
 
 module.exports = router;
