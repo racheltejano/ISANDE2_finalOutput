@@ -482,7 +482,7 @@
 
           <% if (product.user_id) { %>
             <input type="number" value="1" />
-            <a href="javascript:void(0);" class="btn" onclick="addToCart()">Add To Cart</a>
+            <a href="javascript:void(0);" class="btn" onclick="addToCart(<%= product.id %>)">Add To Cart</a>
           <% } else { %>
             <input type="number" value="1" />
             <a href="/" class="btn" >Add To Cart</a>
@@ -517,6 +517,35 @@
 
     <!-- js for product gallery -->
     <script>
+      var ProductImg = document.getElementById('ProductImg');
+      var SmallImg = document.getElementsByClassName('small-img');
+      for (let i = 0; i < SmallImg.length; i++) {
+        SmallImg[i].onclick = function() {
+          ProductImg.src = SmallImg[i].src;
+        };
+      }
+    </script>
+
+    <script>
+      var cart = []; // This will represent the cart stored in session
+
+      function addToCart(productId) {
+        // Check if the cart is already in session storage
+        if (sessionStorage.getItem('cart')) {
+          cart = JSON.parse(sessionStorage.getItem('cart')); // Retrieve existing cart
+        }
+
+        // Add the product ID to the cart array
+        cart.push(productId);
+
+        // Save the updated cart back to session storage
+        sessionStorage.setItem('cart', JSON.stringify(cart));
+
+        // Optional: Provide feedback to the user
+        alert('Product added to cart!');
+      }
+
+      // Product image gallery functionality
       var ProductImg = document.getElementById('ProductImg');
       var SmallImg = document.getElementsByClassName('small-img');
       for (let i = 0; i < SmallImg.length; i++) {
