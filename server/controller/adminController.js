@@ -84,8 +84,22 @@ const updateSellerApproval = async (req, res) => {
 };
 
 /* Fetch Inventory Functions */
+const fetchSellers = async () => {
+    const { data: sellers, error } = await supabaseClient
+        .from('sellers')
+        .select('seller_id, name'); // Adjust field names based on your table structure
+
+    if (error) {
+        console.error('Error fetching sellers:', error);
+        throw error;
+    }
+
+    return sellers;
+};
+
+
 // Function to fetch products
-const fetchProducts = async (categoryFilter) => {
+const fetchProducts = async (categoryFilter, sellerFilter, viewFilter) => {
     let query = supabaseClient.from('products').select(`
         product_id,
         name,
@@ -103,6 +117,20 @@ const fetchProducts = async (categoryFilter) => {
 
     if (categoryFilter) {
         query = query.eq('category_id', categoryFilter);
+    }
+
+    // Apply seller filter
+    if (sellerFilter) {
+        query = query.eq('seller.id', sellerFilter);
+    }
+
+    // Apply view filter (e.g., in-stock or out-of-stock products)
+    if (viewFilter) {
+        if (viewFilter === 'inStock') {
+            query = query.gt('stock', 0);
+        } else if (viewFilter === 'outOfStock') {
+            query = query.eq('stock', 0);
+        }
     }
 
     const { data: products, error } = await query;
@@ -144,16 +172,27 @@ const fetchCategories = async () => {
 // Main function to get Inventory
 const getInventory = async (req, res) => {
     const categoryFilter = req.query.category;
+    const sellerFilter = req.query.seller;
+    const viewFilter = req.query.view;
 
     try {
-        const products = await fetchProducts(categoryFilter);
+        const products = await fetchProducts(categoryFilter, sellerFilter, viewFilter);
         const inventory = formatInventory(products);
-        const categories = await fetchCategories();
 
-        res.render('System/admin/adminInventory', { inventory, categories });
+        const categories = await fetchCategories();
+        const sellers = await fetchSellers();
+
+       res.render('System/admin/adminInventory', {
+            inventory,
+            categories,
+            sellers,
+            selectedCategory: categoryFilter,
+            selectedSeller: sellerFilter,
+            selectedView: viewFilter,
+        });
 
     } catch (err) {
-        console.error('Error fetching inventory data:', err); // Log the detailed error
+        console.error('Error fetching inventory data:', err); 
         res.status(500).send('Error fetching inventory data.');
     }
 };

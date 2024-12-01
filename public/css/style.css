@@ -5,8 +5,6 @@
         Typography: Dark Gray
 */
 
-
-
 /* Global Styles */
 body {
   font-family: 'Poppins', sans-serif;
@@ -27,14 +25,12 @@ body {
   background-color: #333;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 .navbar-logo .navbar-brand {
   font-size: 1.5rem;
   font-weight: bold;
   color: #fff;
   text-decoration: none;
 }
-
 .navbar-links {
   list-style: none;
   display: flex;
@@ -42,11 +38,9 @@ body {
   padding: 0;
   gap: 1rem;
 }
-
 .navbar-item {
   display: inline-block;
 }
-
 .navbar-link {
   text-decoration: none;
   font-size: 1rem;
@@ -55,11 +49,9 @@ body {
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
-
 .navbar-link:hover {
   background-color: #171616;
 }
-
 .navbar-button {
   background-color: #fff;
   color:#333;
@@ -67,13 +59,11 @@ body {
   border: 2px solid #fff;
   transition: all 0.3s ease;
 }
-
 .navbar-button:hover {
   background-color: #333;
   color: #fff;
   border-color: #fff;
 }
-
 /* //////////////////////////////////////////////////////////////////////// */
 /*                             SYSTEM LOGIN STYLES                          */
 /* //////////////////////////////////////////////////////////////////////// */
@@ -91,7 +81,6 @@ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 border-radius: 15px;
 gap: 2rem; /* Space between form and image */
 }
-
 /* Form Section */
 .systemLogin-form-container {
 flex: 1; /* Takes up 50% of the space */
@@ -99,7 +88,6 @@ display: flex;
 flex-direction: column;
 align-items: center;
 }
-
 .systemLogin-text-header {
 font-size: 2.5rem;
 text-align: center;
@@ -107,13 +95,11 @@ margin-bottom: 1.5rem;
 color: #333;
 font-weight: bold;
 }
-
 .systemLogin-form {
 width: 100%;
 display: flex;
 flex-direction: column;
 }
-
 .systemLogin-input {
 width: 100%;
 padding: 0.9rem;
@@ -125,13 +111,11 @@ box-sizing: border-box;
 background-color: #f9f9f9;
 transition: 0.3s ease;
 }
-
 .systemLogin-input:focus {
 border-color: #333;
 background-color: #fff;
 outline: none;
 }
-
 .systemLogin-button {
 width: 100%;
 padding: 1rem;
@@ -144,17 +128,14 @@ font-size: 1.2rem;
 font-weight: bold;
 transition: 0.3s ease;
 }
-
 .systemLogin-button:hover {
 background-color: #c27b28;
 }
-
 /* Image Section */
 .systemLogin-image-container {
 flex: 1; /* Takes up 50% of the space */
 text-align: center;
 }
-
 .systemLogin-image {
 width: 100%;
 max-width: 400px; /* Adjust the max width of the image */
@@ -178,7 +159,6 @@ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 border-radius: 15px;
 gap: 2rem; /* Space between form and any additional elements */
 }
-
 /* Form Section */
 .websiteLogin-form-container {
 flex: 1; /* Takes up 50% of the space */
@@ -186,7 +166,6 @@ display: flex;
 flex-direction: column;
 align-items: center;
 }
-
 .websiteLogin-text-header {
 font-size: 2.5rem;
 text-align: center;
@@ -194,13 +173,11 @@ margin-bottom: 1.5rem;
 color: #333;
 font-weight: bold;
 }
-
 .websiteLogin-form {
 width: 100%;
 display: flex;
 flex-direction: column;
 }
-
 .websiteLogin-input {
 width: 100%;
 padding: 0.9rem;
@@ -212,13 +189,11 @@ box-sizing: border-box;
 background-color: #f9f9f9;
 transition: 0.3s ease;
 }
-
 .websiteLogin-input:focus {
 border-color:#333;
 background-color: #fff;
 outline: none;
 }
-
 .websiteLogin-button {
 width: 100%;
 padding: 1rem;
@@ -231,16 +206,13 @@ font-size: 1.2rem;
 font-weight: bold;
 transition: 0.3s ease;
 }
-
 .websiteLogin-button:hover {
 background-color: #c27b28;
 }
-
 .websiteLogin-image-container {
 flex: 1;
 text-align: center;
 }
-
 .websiteLogin-image {
 width: 100%;
 max-width: 400px; 
@@ -265,7 +237,6 @@ box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 border-radius: 15px;
 gap: 2rem;
 }
-
 /* Form Section */
 .register-form-container {
 flex: 1;
@@ -274,7 +245,6 @@ flex-direction: column;
 justify-content: center;
 padding: 1rem;
 }
-
 .register-text-header {
 font-size: 2.5rem;
 text-align: center;
@@ -283,14 +253,12 @@ color: #333;
 font-weight: bold;
 font-family: 'Poppins', sans-serif;
 }
-
 .register-form {
 width: 100%;
 display: flex;
 flex-direction: column;
 gap: 1rem;
 }
-
 /* Register Inputs */
 .register-input {
 width: 100%;
@@ -303,13 +271,11 @@ box-sizing: border-box;
 background-color: #f9f9f9;
 transition: 0.3s ease;
 }
-
 .register-input:focus {
 border-color: #333;
 background-color: #fff;
 outline: none;
 }
-
 .register-button {
 padding: 1rem;
 background-color:#333;
@@ -322,11 +288,9 @@ font-weight: bold;
 text-transform: uppercase;
 transition: 0.3s ease;
 }
-
 .register-button:hover {
 background-color: #c27b28;
 }
-
 /* Image Section */
 .register-image-container {
 flex: 1;
@@ -335,13 +299,11 @@ display: flex;
 justify-content: center;
 align-items: center;
 }
-
 .register-image {
 width: 100%;
 max-width: 450px;
 border-radius: 10px;
 }
-
 
 /* //////////////////////////////////////////////////////////////////////// */
 /*                          WEBSITE REGISTER STYLES                         */
@@ -361,7 +323,6 @@ border-radius: 10px;
   border-radius: 15px;
   gap: 2rem;
 }
-
 /* Form Section */
 .customerRegister-form-container {
   flex: 1;
@@ -370,7 +331,6 @@ border-radius: 10px;
   justify-content: center;
   padding: 1rem;
 }
-
 .customerRegister-text-header {
   font-size: 2.5rem;
   text-align: center;
@@ -379,14 +339,12 @@ border-radius: 10px;
   font-weight: bold;
   font-family: 'Poppins', sans-serif;
 }
-
 .customerRegister-form {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
-
 .customerRegister-input {
     width: 100%;
     padding: 0.9rem; 
@@ -403,7 +361,6 @@ border-radius: 10px;
   background-color: #fff;
   outline: none;
 }
-
 .customerRegister-button {
   padding: 1rem;
   background-color: #333;
@@ -416,11 +373,9 @@ border-radius: 10px;
   text-transform: uppercase;
   transition: 0.3s ease;
 }
-
 .customerRegister-button:hover {
   background-color: #c27b28;
 }
-
 /* Image Section */
 .customerRegister-image-container {
   flex: 1;
@@ -429,14 +384,11 @@ border-radius: 10px;
   justify-content: center;
   align-items: center;
 }
-
 .customerRegister-image {
   width: 100%;
   max-width: 450px;
   border-radius: 10px;
 }
-
-
 
 /* //////////////////////////////////////////////////////////////////////// */
 /*                             ADMIN: SIDE BAR                              */
@@ -845,8 +797,108 @@ border-radius: 10px;
 
 
 
+/* //////////////////////////////////////////////////////////////////////// */
+/*                          ADMIN: INVENTORY PAGE                           */
+/* //////////////////////////////////////////////////////////////////////// */
 
+/* Main Content Area for Admin Inventory Page */
+.admin-inventory .main-content {
+  margin-left: 260px; /* Ensure spacing for sidebar */
+  padding: 20px;
+}
 
+/* Filter Section */
+.admin-inventory .filter-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.admin-inventory .filter-section label {
+  font-weight: bold;
+}
+
+.admin-inventory .filter-section select {
+  padding: 5px;
+  font-size: 14px;
+}
+
+/* Inventory Table */
+.admin-inventory .inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-inventory .inventory-table th,
+.admin-inventory .inventory-table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.admin-inventory .inventory-table th {
+  background-color: #333;
+  color: #fff;
+}
+
+.admin-inventory .inventory-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Stock Status Styling */
+.admin-inventory .in-stock {
+  color: green;
+}
+
+.admin-inventory .low-stock {
+  color: orange; /* Changed to orange for better visibility */
+}
+
+.admin-inventory .out-of-stock {
+  color: red;
+}
+
+/* Modal Styles */
+.admin-inventory .modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.admin-inventory .modal-content {
+  background: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  width: 50%;
+  border-radius: 5px;
+}
+
+.admin-inventory .modal-content .close {
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+
+.admin-inventory .modal-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 10px 0;
+}
+
+.admin-inventory .modal-content h2 {
+  margin-bottom: 15px;
+}
+
+.admin-inventory .modal-content p {
+  margin: 5px 0;
+}
 
 
 

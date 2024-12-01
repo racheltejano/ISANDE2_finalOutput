@@ -9,81 +9,114 @@
   <link rel="stylesheet" href="/css/style.css"> 
 </head>
 <body>
-  <div class="container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <%- include('../../partials/sidebarAdmin') %>
-   </aside>
-    
-    <!-- Main Content -->
-    <main class="main-content">
-      <h1>Admin Inventory</h1>
-        <form action="/admin/inventory" method="get">
-          <select name="category" onchange="this.form.submit()">
-              <option value="">Select Category</option>
-              <% categories.forEach(category => { %>
-                  <option value="<%= category.category_id %>"><%= category.category_name %></option>
-              <% }) %>
-          </select>
-        </form>
+  <div class="admin-inventory">
+    <div class="container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <%- include('../../partials/sidebarAdmin') %>
+    </aside>
+      
+      <!-- Main Content -->
+      <main class="main-content">
+        <h1>Admin Inventory</h1>
+          <form action="/admin/inventory" method="get" class="filter-section">
+            <!-- Category Filter -->
+            <label for="category">Category:</label>
+              <select name="category" id="category" onchange="this.form.submit()">
+                  <option value="">Select Category</option>
+                      <% categories.forEach(category => { %>
+                          <option value="<%= category.category_id %>"><%= category.category_name %></option>
+                      <% }) %>
+              </select>
 
-        <table border="1" cellspacing="0" cellpadding="10">
-          <thead>
-            <tr>
-              <% if (inventory.length > 0 && inventory[0].id) { %>
-                <th>Product ID</th>
-              <% } %>
-              <th>Item Name</th>
-              <th>Price</th>
-              <th>Stock</th>
-              <th>Seller</th>
-              <th>Category</th>
-              <th>Status</th>
-              <th>Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% inventory.forEach(product => { %>
+            <!-- Seller Filter -->
+              <label for="seller">Seller:</label>
+              <select name="seller" id="seller" onchange="this.form.submit()">
+                <option value="">All Sellers</option>
+                <% sellers.forEach(seller => { %>
+                  <option value="<%= seller.id %>" 
+                    <%= seller.id === selectedSeller ? 'selected' : '' %>>
+                    <%= seller.name %>
+                  </option>
+                <% }) %>
+              </select>
+              
+             <!-- View Filter -->
+              <label for="view">View:</label>
+              <select name="view" id="view" onchange="this.form.submit()">
+                  <option value="">All Products</option>
+                  <option value="inStock" <%= selectedView === 'inStock' ? 'selected' : '' %>>In Stock</option>
+                  <option value="outOfStock" <%= selectedView === 'outOfStock' ? 'selected' : '' %>>Out of Stock</option>
+              </select>
+              <label for="rows">Show:</label>
+              <select name="rows" id="rows" onchange="this.form.submit()">
+                <option value="5">5 rows</option>
+                <option value="10">10 rows</option>
+                <option value="20">20 rows</option>
+              </select>
+            </form>
+
+            <!-- Inventory Table -->
+            <table class="inventory-table">
+            <thead>
               <tr>
-                <% if (product.id) { %>
-                  <td><%= product.id %></td>
-                <% } %>
-                <td><%= product.name %></td>
-                <td>₱<%= product.price.toFixed(2) %></td>
-                <td><%= product.stock %></td>
-                <td><%= product.seller %></td>
-                <td><%= product.category %></td>
-                <td><%= product.status %></td>
-                <td>
-                  <button onclick="toggleDetails('details-<%= product.id %>')">Details</button>
-                  <div id="details-<%= product.id %>" class="details" style="display: none;">
-                    <h4>Images</h4>
-                    <ul>
-                      <% product.images.forEach(image => { %>
-                        <li>
-                          <a href="<%= image.image_url %>" target="_blank">View Image</a>
-                        </li>
-                      <% }); %>
-                    </ul>
-                    <h4>Attributes</h4>
-                    <ul>
-                      <% product.attributes.forEach(attr => { %>
-                        <li><%= attr.name %>: <%= attr.value %></li>
-                      <% }); %>
-                    </ul>
-                  </div>
-                </td>
+                <th>Item Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Seller</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Details</th>
               </tr>
-            <% }); %>
-          </tbody>
-        </table>
-    </main>
-  </div>    
-
+            </thead>
+            <tbody>
+              <% inventory.forEach(product => { %>
+                <tr>
+                  <td><%= product.name %></td>
+                  <td>₱<%= product.price.toFixed(2) %></td>
+                  <td><%= product.stock %></td>
+                  <td><%= product.seller %></td>
+                  <td><%= product.category %></td>
+                  <td class="<%= product.stock > 10 ? 'in-stock' : product.stock > 0 ? 'low-stock' : 'out-of-stock' %>">
+                    <%= product.stock > 10 ? 'In Stock' : product.stock > 0 ? 'Low Stock' : 'Out of Stock' %>
+                  </td>
+                  <td>
+                    <button onclick="showDetails(<%= product.id %>)">View</button>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+      </main>
+    </div>   
+    
+    <div id="detailsModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="modalBody"></div>
+      </div>
+  </div>
   <script>
-    function toggleDetails(id) {
-      const element = document.getElementById(id);
-      element.style.display = element.style.display === 'none' ? 'block' : 'none';
+    function showDetails(productId) {
+      // Fetch product details and display in the modal
+      const product = <%- JSON.stringify(inventory) %>.find(p => p.id === productId);
+      const modalBody = document.getElementById('modalBody');
+      modalBody.innerHTML = `
+        <h2>${product.name}</h2>
+        <p><strong>Price:</strong> ₱${product.price.toFixed(2)}</p>
+        <p><strong>Stock:</strong> ${product.stock}</p>
+        <p><strong>Seller:</strong> ${product.seller}</p>
+        <p><strong>Category:</strong> ${product.category}</p>
+        <h3>Images</h3>
+        ${product.images.map(img => `<img src="${img.image_url}" alt="${product.name}" />`).join('')}
+        <h3>Attributes</h3>
+        ${product.attributes.map(attr => `<p>${attr.name}: ${attr.value}</p>`).join('')}
+      `;
+      document.getElementById('detailsModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('detailsModal').style.display = 'none';
     }
   </script>
 </body>
