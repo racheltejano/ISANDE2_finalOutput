@@ -1,38 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const supabaseClient = require('../database/supabaseClient');
-const { getPendingSellers, updateSellerApproval, getInventory, getPendingSellersCount } = require('../controller/adminController');
+const { getPendingSellers, updateSellerApproval, getInventory, getPendingSellersCount, getProductCount } = require('../controller/adminController');
 
 
-router.get('/dashboard', getPendingSellersCount, (req, res) => {
-    res.render('System/admin/adminDashboard', {
-        pendingSellersCount: req.pendingSellersCount, // Pass count to EJS
-    });
-});
+// Consolidated dashboard route
+router.get('/dashboard', getPendingSellersCount, async (req, res) => {
+    try {
+        // Fetch product count
+        const productCount = await getProductCount();
 
-router.get('/dashboard', async (req, res) => {
-  try {
-      // Fetch the count of pending sellers
-      const { data: sellers, error } = await supabaseClient
-          .from('sellers')
-          .select('id', { count: 'exact' })
-          .eq('approval_status', false);
-
-      if (error) {
-          console.error('Error fetching pending sellers count:', error);
-          return res.status(500).json({ message: 'Failed to fetch pending sellers count' });
-      }
-
-      const pendingSellerCount = sellers.length; // Or sellers.count if your DB supports it
-
-      res.render('System/admin/adminDashboard', {
-          pageTitle: 'Admin Dashboard',
-          pendingSellerCount,
-      });
-  } catch (err) {
-      console.error('Unexpected error:', err);
-      res.status(500).json({ message: 'Internal server error' });
-  }
+        // Render dashboard with both counts
+        res.render('System/admin/adminDashboard', {
+            pendingSellersCount: req.pendingSellersCount, // From middleware
+            productCount, // From database
+        });
+    } catch (err) {
+        console.error('Error rendering adminDashboard:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 });
 
 

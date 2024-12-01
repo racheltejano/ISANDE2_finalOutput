@@ -21,6 +21,20 @@ const getPendingSellersCount = async (req, res, next) => {
     }
 };
 
+const getProductCount = async () => {
+    const { count, error } = await supabaseClient
+        .from('products')
+        .select('product_id', { count: 'exact' });
+
+    if (error) {
+        console.error('Error fetching product count:', error);
+        throw error;
+    }
+
+    return count || 0;
+};
+
+
 // Function to get pending sellers
 const getPendingSellers = async (req, res) => {
     try {
@@ -82,9 +96,6 @@ const updateSellerApproval = async (req, res) => {
         res.status(500).json({ success: false, message: 'An error occurred while updating seller approval status.' });
     }
 };
-
-
-
 
 
 
@@ -184,7 +195,17 @@ const getInventory = async (req, res) => {
     const sellerFilter = req.query.seller;
     const viewFilter = req.query.view;
 
+
     try {
+        // Fetch total product count
+        let productCount = 0;
+        try {
+            productCount = await getProductCount();
+        } catch (countError) {
+            console.error('Error fetching product count:', countError);
+            productCount = 0; // Fallback if count fails
+        }
+
         const products = await fetchProducts(categoryFilter, sellerFilter, viewFilter);
         const inventory = formatInventory(products);
 
@@ -198,6 +219,7 @@ const getInventory = async (req, res) => {
             selectedCategory: categoryFilter,
             selectedSeller: sellerFilter,
             selectedView: viewFilter,
+            productCount,
         });
 
     } catch (err) {
@@ -210,5 +232,6 @@ module.exports = {
     getPendingSellersCount,
     getPendingSellers,
     updateSellerApproval,
-    getInventory
+    getInventory,
+    getProductCount
 };
