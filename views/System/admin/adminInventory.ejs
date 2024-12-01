@@ -7,66 +7,76 @@
   <link rel="stylesheet" href="/styles.css"> <!-- Optional CSS -->
 </head>
 <body>
-  <h1>Admin Inventory</h1>
-  <form action="/admin/inventory" method="get">
-    <select name="category" onchange="this.form.submit()">
-        <option value="">Select Category</option>
-        <% categories.forEach(category => { %>
-            <option value="<%= category.category_id %>"><%= category.category_name %></option>
-        <% }) %>
-    </select>
-</form>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <%- include('../../partials/sidebarAdmin') %>
+   </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <h1>Admin Inventory</h1>
+        <form action="/admin/inventory" method="get">
+          <select name="category" onchange="this.form.submit()">
+              <option value="">Select Category</option>
+              <% categories.forEach(category => { %>
+                  <option value="<%= category.category_id %>"><%= category.category_name %></option>
+              <% }) %>
+          </select>
+        </form>
 
-  <table border="1" cellspacing="0" cellpadding="10">
-    <thead>
-      <tr>
-        <% if (inventory.length > 0 && inventory[0].id) { %>
-          <th>Product ID</th>
-        <% } %>
-        <th>Item Name</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Seller</th>
-        <th>Category</th>
-        <th>Status</th>
-        <th>Details</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% inventory.forEach(product => { %>
-        <tr>
-          <% if (product.id) { %>
-            <td><%= product.id %></td>
-          <% } %>
-          <td><%= product.name %></td>
-          <td>₱<%= product.price.toFixed(2) %></td>
-          <td><%= product.stock %></td>
-          <td><%= product.seller %></td>
-          <td><%= product.category %></td>
-          <td><%= product.status %></td>
-          <td>
-            <button onclick="toggleDetails('details-<%= product.id %>')">Details</button>
-            <div id="details-<%= product.id %>" class="details" style="display: none;">
-              <h4>Images</h4>
-              <ul>
-                <% product.images.forEach(image => { %>
-                  <li>
-                    <a href="<%= image.image_url %>" target="_blank">View Image</a>
-                  </li>
-                <% }); %>
-              </ul>
-              <h4>Attributes</h4>
-              <ul>
-                <% product.attributes.forEach(attr => { %>
-                  <li><%= attr.name %>: <%= attr.value %></li>
-                <% }); %>
-              </ul>
-            </div>
-          </td>
-        </tr>
-      <% }); %>
-    </tbody>
-  </table>
+        <table border="1" cellspacing="0" cellpadding="10">
+          <thead>
+            <tr>
+              <% if (inventory.length > 0 && inventory[0].id) { %>
+                <th>Product ID</th>
+              <% } %>
+              <th>Item Name</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Seller</th>
+              <th>Category</th>
+              <th>Status</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% inventory.forEach(product => { %>
+              <tr>
+                <% if (product.id) { %>
+                  <td><%= product.id %></td>
+                <% } %>
+                <td><%= product.name %></td>
+                <td>₱<%= product.price.toFixed(2) %></td>
+                <td><%= product.stock %></td>
+                <td><%= product.seller %></td>
+                <td><%= product.category %></td>
+                <td><%= product.status %></td>
+                <td>
+                  <button onclick="toggleDetails('details-<%= product.id %>')">Details</button>
+                  <div id="details-<%= product.id %>" class="details" style="display: none;">
+                    <h4>Images</h4>
+                    <ul>
+                      <% product.images.forEach(image => { %>
+                        <li>
+                          <a href="<%= image.image_url %>" target="_blank">View Image</a>
+                        </li>
+                      <% }); %>
+                    </ul>
+                    <h4>Attributes</h4>
+                    <ul>
+                      <% product.attributes.forEach(attr => { %>
+                        <li><%= attr.name %>: <%= attr.value %></li>
+                      <% }); %>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+    </main>
+  </div>    
 
   <script>
     function toggleDetails(id) {
