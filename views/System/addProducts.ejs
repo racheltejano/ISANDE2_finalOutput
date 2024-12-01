@@ -288,57 +288,57 @@
     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
 
     const dynamicInputs = {
-  1: [ // Clothing
-    { label: 'Size', name: 'size', type: 'text', placeholder: 'e.g., S, M, L', attribute_id: 1 },
-    { label: 'Color', name: 'color', type: 'text', placeholder: 'e.g., Red, Blue', attribute_id: 2 },
-    { label: 'Gender', name: 'gender', type: 'select', options: ['Men', 'Women', 'Unisex'], attribute_id: 3 }
-  ],
-  2: [ // Accessories
-    { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Leather, Metal', attribute_id: 4 },
-    { label: 'Color', name: 'color', type: 'text', placeholder: 'e.g., Black, Gold', attribute_id: 5 },
-    { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Fossil, Casio', attribute_id: 6 }
-  ],
-  3: [ // Gadgets
-    { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Apple, Samsung', attribute_id: 7 },
-    { label: 'Model', name: 'model', type: 'text', placeholder: 'e.g., iPhone 14, Galaxy S21', attribute_id: 8 },
-    { label: 'Features', name: 'features', type: 'text', placeholder: 'e.g., Bluetooth, NFC', attribute_id: 9 }
-  ],
-  4: [ // Cameras
-    { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Canon, Nikon', attribute_id: 10 },
-    { label: 'Lens', name: 'lens', type: 'text', placeholder: 'e.g., 50mm, Zoom Lens', attribute_id: 11 },
-    { label: 'Resolution', name: 'resolution', type: 'text', placeholder: 'e.g., 1080p, 4K', attribute_id: 12 }
-  ],
-  5: [ // Shoes
-    { label: 'Size', name: 'size', type: 'text', placeholder: 'e.g., 6, 7, 8', attribute_id: 13 },
-    { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Leather, Canvas', attribute_id: 14 },
-    { label: 'Color', name: 'color', type: 'text', placeholder: 'e.g., White, Black', attribute_id: 15 }
-  ],
-  6: [ // Bags
-    { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Louis Vuitton, Gucci', attribute_id: 16 },
-    { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Leather, Nylon', attribute_id: 17 },
-    { label: 'Size', name: 'size', type: 'text', placeholder: 'e.g., Small, Medium, Large', attribute_id: 18 }
-  ],
-  7: [ // Furniture
-    { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Wood, Metal', attribute_id: 19 },
-    { label: 'Dimensions', name: 'dimensions', type: 'text', placeholder: 'e.g., 5ft x 3ft', attribute_id: 20 },
-    { label: 'Color', name: 'color', type: 'text', placeholder: 'e.g., Brown, White', attribute_id: 21 }
-  ],
-  8: [ // Books
-    { label: 'Author', name: 'author', type: 'text', placeholder: 'e.g., J.K. Rowling, George Orwell', attribute_id: 22 },
-    { label: 'Genre', name: 'genre', type: 'text', placeholder: 'e.g., Fiction, Non-Fiction', attribute_id: 23 },
-    { label: 'Language', name: 'language', type: 'text', placeholder: 'e.g., English, Spanish', attribute_id: 24 }
-  ],
-  9: [ // Electronics
-    { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Sony, LG', attribute_id: 25 },
-    { label: 'Model', name: 'model', type: 'text', placeholder: 'e.g., Bravia X90', attribute_id: 26 },
-    { label: 'Power', name: 'power', type: 'text', placeholder: 'e.g., 220V, 110V', attribute_id: 27 }
-  ],
-  10: [ // Jewelry
-    { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Gold, Silver', attribute_id: 28 },
-    { label: 'Gemstone', name: 'gemstone', type: 'text', placeholder: 'e.g., Diamond, Sapphire', attribute_id: 29 },
-    { label: 'Weight', name: 'weight', type: 'text', placeholder: 'e.g., 1g, 2g', attribute_id: 30 }
-  ]
-};
+    1: [ // Clothing
+      { label: 'Size', name: 'size', type: 'text', placeholder: 'e.g., S, M, L', attribute_id: 1 },
+      { label: 'Color', name: 'color', type: 'text', placeholder: 'e.g., Red, Blue', attribute_id: 2 },
+      { label: 'Gender', name: 'gender', type: 'select', options: ['Men', 'Women', 'Unisex'], attribute_id: 3 }
+    ],
+    2: [ // Accessories
+      { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Leather, Metal', attribute_id: 4 },
+      { label: 'Color', name: 'color', type: 'text', placeholder: 'e.g., Black, Gold', attribute_id: 5 },
+      { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Fossil, Casio', attribute_id: 6 }
+    ],
+    3: [ // Gadgets
+      { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Apple, Samsung', attribute_id: 7 },
+      { label: 'Model', name: 'model', type: 'text', placeholder: 'e.g., iPhone 14, Galaxy S21', attribute_id: 8 },
+      { label: 'Features', name: 'features', type: 'text', placeholder: 'e.g., Bluetooth, NFC', attribute_id: 9 }
+    ],
+    4: [ // Cameras
+      { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Canon, Nikon', attribute_id: 10 },
+      { label: 'Lens', name: 'lens', type: 'text', placeholder: 'e.g., 50mm, Zoom Lens', attribute_id: 11 },
+      { label: 'Resolution', name: 'resolution', type: 'text', placeholder: 'e.g., 1080p, 4K', attribute_id: 12 }
+    ],
+    5: [ // Makeup
+      { label: 'Shade', name: 'shade', type: 'text', placeholder: 'e.g., Light, Medium, Dark', attribute_id: 13 },
+      { label: 'Type', name: 'type', type: 'text', placeholder: 'e.g., Matte, Glossy', attribute_id: 14 },
+      { label: 'Skin Type', name: 'skin_type', type: 'text', placeholder: 'e.g., Oily, Dry', attribute_id: 15 }
+    ],
+    6: [ // Skincare
+      { label: 'Brand', name: 'brand', type: 'text', placeholder: 'e.g., Neutrogena, Olay', attribute_id: 16 },
+      { label: 'Skin Concern', name: 'skin_concern', type: 'text', placeholder: 'e.g., Acne, Dryness', attribute_id: 17 },
+      { label: 'Usage', name: 'usage', type: 'text', placeholder: 'e.g., Morning, Night', attribute_id: 18 }
+    ],
+    7: [ // Furniture
+      { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Wood, Metal', attribute_id: 19 },
+      { label: 'Dimensions', name: 'dimensions', type: 'text', placeholder: 'e.g., 5ft x 3ft', attribute_id: 20 },
+      { label: 'Color', name: 'color', type: 'text', placeholder: 'e.g., Brown, White', attribute_id: 21 }
+    ],
+    8: [ // Books
+      { label: 'Author', name: 'author', type: 'text', placeholder: 'e.g., J.K. Rowling, George Orwell', attribute_id: 22 },
+      { label: 'Genre', name: 'genre', type: 'text', placeholder: 'e.g., Fiction, Non-Fiction', attribute_id: 23 },
+      { label: 'Language', name: 'language', type: 'text', placeholder: 'e.g., English, Spanish', attribute_id: 24 }
+    ],
+    9: [ // Toys
+      { label: 'Age Group', name: 'age_group', type: 'text', placeholder: 'e.g., 3-5 years, 6-9 years', attribute_id: 25 },
+      { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Plastic, Wood', attribute_id: 26 },
+      { label: 'Safety Certification', name: 'safety_certification', type: 'text', placeholder: 'e.g., CE, ASTM', attribute_id: 27 }
+    ],
+    10: [ // Shoes
+      { label: 'Size', name: 'size', type: 'text', placeholder: 'e.g., 6, 7, 8', attribute_id: 28 },
+      { label: 'Color', name: 'color', type: 'text', placeholder: 'e.g., White, Black', attribute_id: 29 },
+      { label: 'Material', name: 'material', type: 'text', placeholder: 'e.g., Leather, Canvas', attribute_id: 30 }
+    ]
+  };
 
 
     categorySelect.addEventListener('change', () => {

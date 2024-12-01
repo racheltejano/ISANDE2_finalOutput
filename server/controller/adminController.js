@@ -85,6 +85,10 @@ const updateSellerApproval = async (req, res) => {
 
 
 
+
+
+
+
 // Function to fetch products
 const fetchProducts = async (categoryFilter, sellerFilter, viewFilter) => {
     let query = supabaseClient.from('products').select(`
