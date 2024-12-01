@@ -39,7 +39,7 @@ const fetchProductDetails = async (productId) => {
 //   product (object): The raw product data object returned from the database.
 // Returns:
 //   Object: A formatted version of the product with necessary details and structured for rendering.
-const formatProductDetails = (product) => {
+const formatProductDetails = (product, userId) => {
   return {
     id: product.product_id,
     name: product.name,
@@ -57,6 +57,7 @@ const formatProductDetails = (product) => {
       value: attr.value,
       name: attr.attribute.attribute_name,
     })),
+    user_id: userId, // Include user_id in the formatted product details
   };
 };
 
@@ -68,6 +69,7 @@ const formatProductDetails = (product) => {
 //   Renders the product detail page or sends an error response.
 exports.getProductDetailsPage = async (req, res) => {
   const productId = req.params.id; // Capture the product ID from the URL
+  const user_id = req.session.user?.user_id;
 
   try {
     if (!productId) {
@@ -75,7 +77,7 @@ exports.getProductDetailsPage = async (req, res) => {
     }
 
     const product = await fetchProductDetails(productId);  // Fetch product details
-    const formattedProduct = formatProductDetails(product); // Format product data for the page
+    const formattedProduct = formatProductDetails(product, user_id); // Format product data for the page
 
     // Render the product detail page, passing the formatted product details
     return res.render('System/productDetail', { product: formattedProduct });
