@@ -46,7 +46,7 @@ const authWebsiteController = {
       req.session.user = user; // Store user info in the session
 
       // Redirect the customer to their dashboard or home page
-      return res.redirect('/customer/index'); 
+      return res.redirect('/customer/index');
 
     } catch (error) {
       console.error('Error in login:', error);
@@ -55,12 +55,20 @@ const authWebsiteController = {
   },
 
   logout: (req, res) => {
-    // Destroy the session or token when logging out
+    req.session.user = null;
+
+    // Destroy the session
     req.session.destroy((err) => {
       if (err) {
         console.error('Error destroying session:', err);
+        return res.status(500).send('Could not log out. Please try again.');
       }
-      res.redirect('/'); // Redirect to home page after logout
+
+      // Clear the cookie
+      res.clearCookie('connect.sid', { path: '/' }); // Specify the same path as the cookie
+
+      console.log("LOGGED OUT!");
+      return res.status(200).send('Logged out successfully.');
     });
   },
 };

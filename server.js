@@ -24,6 +24,10 @@ app.use(session({
   secret: 'akolangpogumawangprojectnamin', // Change this to a more secure secret
   resave: false,
   saveUninitialized: true,
+  cookie: {
+    secure: false, // Set to true if using HTTPS in production
+    sameSite: 'Lax' // Use 'None' if you need to support cross-origin requests
+  }
 }));
 
 const protectRoute = (req, res, next) => {

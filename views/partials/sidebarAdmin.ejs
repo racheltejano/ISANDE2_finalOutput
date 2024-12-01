@@ -1,8 +1,28 @@
 <ul>
-  <li><a href=/admin/dashboard><i class="material-icons">dashboard</i> Dashboard</a></li>
-  <li><a href=/admin/inventory><i class="material-icons">inventory</i> Products</a></li>
+  <li><a href="/admin/dashboard"><i class="material-icons">dashboard</i> Dashboard</a></li>
+  <li><a href="/admin/inventory"><i class="material-icons">inventory</i> Products</a></li>
   <li><a href="#"><i class="material-icons">shopping_cart</i> Orders</a></li>
   <li><a href="#"><i class="material-icons">store</i> Sellers</a></li>
   <li><a href="#"><i class="material-icons">settings</i> Settings</a></li>
-  <li><a href="#"><i class="material-icons">logout</i> Logout</a></li>
+  <li><a href="#" id="logoutLink"><i class="material-icons">logout</i> Logout</a></li>
 </ul>
+
+<script>
+    document.getElementById('logoutLink').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default anchor click behavior
+
+        fetch('/websiteLogin/websitelogout', { // Adjusted URL
+            method: 'GET',
+            credentials: 'include' // Include cookies if needed
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Logout failed');
+            }
+          window.location.href = '/';
+        })
+        .catch(error => {
+            console.error('Error during logout:', error);
+        });
+    });
+</script>
