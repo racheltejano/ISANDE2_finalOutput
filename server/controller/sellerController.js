@@ -21,8 +21,24 @@ exports.getAddProductPage = async (req, res) => {
 exports.addProduct = async (req, res) => {
   try {
     const { name, category_id, price, stock, description, attributes } = req.body;
-    const seller_id = req.session.user?.user_id; // Ensure session exists
+    const user_id = req.session.user?.user_id; // Ensure session exists
 
+    if (!user_id) {
+      return res.status(401).send('Unauthorized: User not logged in.');
+    }
+
+    const { data: seller, error: sellerError } = await supabase
+      .from('sellers')
+      .select('seller_id')
+      .eq('user_id', user_id)
+      .single();
+
+    if (sellerError || !seller) {
+      return res.status(403).send('Unauthorized: User is not a seller.');
+    }
+
+    const seller_id = seller.seller_id; // Use this seller_id for adding the product
+    
     // Insert the main product
     const { data: product, error: productError } = await supabase
       .from('products')
