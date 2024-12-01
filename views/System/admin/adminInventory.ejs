@@ -103,11 +103,13 @@
       // Fetch product details and display in the modal
       const product = <%- JSON.stringify(inventory) %>.find(p => p.id === productId);
       const modalBody = document.getElementById('modalBody');
-
+      
+      
 
       // Create carousel for images
       const imageCarouselHTML = `
         <h2>${product.name}</h2>
+        <h3>Images</h3>
         <div class="image-carousel" id="imageCarousel">
           ${product.images.map((img, index) => 
             `<img src="${img.image_url}" alt="${product.name}" class="carousel-image ${index === 0 ? 'active' : ''}" />`
@@ -119,7 +121,6 @@
         <p><strong>Stock:</strong> ${product.stock}</p>
         <p><strong>Seller:</strong> ${product.seller}</p>
         <p><strong>Category:</strong> ${product.category}</p>
-        <h3>Images</h3>
         <h3>Attributes</h3>
         ${product.attributes.map(attr => `<p>${attr.name}: ${attr.value}</p>`).join('')}
       `;
@@ -132,6 +133,7 @@
       document.getElementById('detailsModal').style.display = 'none';
     }
 
+    
     let currentImageIndex = 0;
 
     function changeImage(direction) {
