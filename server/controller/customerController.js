@@ -1,39 +1,86 @@
 const supabase = require('../database/supabaseClient');
 
-exports.getProductDetailsPage = async (req, res) => {
-  /*
-  try {
-    // Access the 'id' parameter from the request URL
-    const productId = req.params.id; // Capture the product ID from the URL
+// Function to fetch product details by ID from the database
+// Params: 
+//   productId (string): The unique identifier of the product to fetch.
+// Returns: 
+//   Object: Returns the product details object or throws an error if the fetch fails.
+const fetchProductDetails = async (productId) => {
+  const { data, error } = await supabase
+    .from('products')
+    .select(`
+            product_id,
+            name,
+            description,
+            price,
+            stock,
+            seller: sellers (name),
+            category: categories (category_id, category_name),
+            status,
+            product_images: product_images (image_id, image_url),
+            product_attributes: product_attributes (
+                value,
+                attribute: attributes (attribute_name)
+            )
+        `)
+    .eq('product_id', productId)
+    .single(); // Use .single() to get a single record
 
-    // Check if an ID was provided
+  if (error) {
+    console.error('Error fetching product details:', error);
+    throw error;
+  }
+
+  return data;
+};
+
+// Function to format the fetched product details into a more usable structure for the frontend
+// Params:
+//   product (object): The raw product data object returned from the database.
+// Returns:
+//   Object: A formatted version of the product with necessary details and structured for rendering.
+const formatProductDetails = (product) => {
+  return {
+    id: product.product_id,
+    name: product.name,
+    price: product.price,
+    description: product.description,
+    stock: product.stock,
+    seller: product.seller.name,
+    category: {
+      id: product.category.category_id,
+      name: product.category.category_name,
+    },
+    status: product.stock === 0 ? 'Out of Stock' : product.stock < 10 ? 'Low Stock' : 'In Stock',
+    images: product.product_images.map(image => image.image_url),
+    attributes: product.product_attributes.map(attr => ({
+      value: attr.value,
+      name: attr.attribute.attribute_name,
+    })),
+  };
+};
+
+// Main function to handle the product details request, fetch and format the data, then render the page
+// Params:
+//   req (object): The request object containing the product ID from the URL params.
+//   res (object): The response object used to render the page or return an error message.
+// Returns:
+//   Renders the product detail page or sends an error response.
+exports.getProductDetailsPage = async (req, res) => {
+  const productId = req.params.id; // Capture the product ID from the URL
+
+  try {
     if (!productId) {
       return res.status(400).send('Product ID is required'); // Return an error if no ID is provided
     }
 
-    // Fetch the specific product details from the 'products' table where the id matches productId
-    const { data: productDetails, error } = await supabase
-      .from('products')
-      .select('*')
-      .eq('id', productId) // Filter by the product ID
-      .single(); // Use .single() to get a single record
+    const product = await fetchProductDetails(productId);  // Fetch product details
+    const formattedProduct = formatProductDetails(product); // Format product data for the page
 
-    // Check for errors in the query
-    if (error) throw error;
-
-    // Check if productDetails is null (not found)
-    if (!productDetails) {
-      return res.status(404).send('Product not found');
-    }
-
-    // Render the product detail page, passing the specific product details
-    return res.render('System/productDetail', { product: productDetails });
+    // Render the product detail page, passing the formatted product details
+    return res.render('System/productDetail', { product: formattedProduct });
   } catch (err) {
-    // Log the error and send a server error response
     console.error('Error fetching product details:', err.message);
     res.status(500).send('Server Error');
   }
-  */
-  console.log("RENDERING PRODUCT DETAILS PAGE")
-  return res.render('productDetail');
 };

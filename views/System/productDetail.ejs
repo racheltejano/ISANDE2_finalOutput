@@ -1,3 +1,4 @@
+<!-- Based on: https://codepen.io/Sunil_Pradhan/pen/qBqgLxK -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -409,174 +410,90 @@
         max-width: 300px;
         padding: 0 20px;
         position: absolute;
-        top: 130px;
-        transition: transform 1s;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        text-align: center;
       }
 
-      form input {
+      input {
         width: 100%;
-        height: 30px;
-        margin: 10px 0;
-        padding: 0 10px;
-        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 5px 0;
+        font-size: 16px;
+        border: 1px solid #333333;
       }
 
-      form .btn {
-        width: 100%;
+      input[type="submit"] {
+        background: #333333;
+        color: #ffffff;
         border: none;
         cursor: pointer;
-        margin: 10px 0;
       }
 
-      form .btn:focus {
-        outline: none;
-      }
-
-      #LoginForm {
-        left: -300px;
-      }
-
-      #RegForm {
-        left: 0;
-      }
-
-      form a {
-        font-size: 12px;
-      }
-
-      #Indicator {
-        width: 100px;
-        border: none;
-        background: #333333;
-        height: 3px;
-        margin-top: 8px;
-        transform: translateX(100px);
-        transition: transform 1s;
+      input[type="submit"]:hover {
+        background: #666666;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <!-- Navbar goes here -->
+      <!-- Navbar can go here -->
     </div>
 
     <!-- single product details -->
     <div class="small-container single-product">
       <div class="row">
         <div class="col-2">
-          <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pro-bems.com%2FIMAGES%2Fimages_1%2FFIG80629P%2Fg%2FFIG80629P_1.jpg&f=1&nofb=1&ipt=a32c03ae2c2a5969c2ddbcb0f7ba2987474de533529efadb7bb2aee6729cdfa9&ipo=images" alt="" width="100%" id="ProductImg" />
+          <!-- Main Product Image -->
+          <img src="<%= product.images[0] %>" alt="<%= product.name %>" width="100%" id="ProductImg" />
 
+          <!-- Small Product Images -->
           <div class="small-img-row">
-            <div class="small-img-col">
-              <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.xmodeltoys.com%2Fphoto%2F1284-7.jpg&f=1&nofb=1&ipt=73d04865a2aaddc0deee0682c2c1097398903aa56bd3c6b5c45c143f30f30642&ipo=images" alt="" width="100%" class="small-img" />
-            </div>
-            <div class="small-img-col">
-              <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.suruga-ya.jp%2Fpics_light%2Fboxart_a%2F603087350_7.jpg%3Fv%3D495162b800ffe9d82b8a&f=1&nofb=1&ipt=6b9f86d2ba9ce4e121df03a47ea11289b4b54193cbe9dbb4b5641bebb258652a&ipo=images" alt="" width="100%" class="small-img" />
-            </div>
-            <div class="small-img-col">
-              <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0643%2F2148%2F7095%2Fproducts%2Fastray-turn-red-7.webp%3Fv%3D1680996261&f=1&nofb=1&ipt=7f1de1a3de735f661e4eda035cc0d3c16ef0b410cc4805884a884f6be733ba0f&ipo=images" alt="" width="100%" class="small-img" />
-            </div>
-            <div class="small-img-col">
-              <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F4.bp.blogspot.com%2F-gK4q5a5M4lI%2FVPH2Oqn4pgI%2FAAAAAAAIfDo%2F1Axl66Pa_9k%2Fs1600%2FUntitled-27_copy.jpg&f=1&nofb=1&ipt=527b6a908710372054c62d80a27aaa637c3ea6648e5d108fe24cb9ecabccd69e&ipo=images" alt="" width="100%" class="small-img" />
-            </div>
+            <% product.images.forEach(image => { %>
+              <div class="small-img-col">
+                <img src="<%= image %>" alt="<%= product.name %>" width="100%" class="small-img" />
+              </div>
+            <% }); %>
           </div>
         </div>
         <div class="col-2">
-          <p>Home / T-Shirt</p>
-          <h1>Gundam MG Astray Turn Red</h1>
-          <h4><span>₱</span>5,299.00</h4>
-          <select>
-            <option>Select Size</option>
-            <option>XXL</option>
-            <option>XL</option>
-            <option>L</option>
-            <option>M</option>
-            <option>S</option>
-          </select>
+          <p>Home / <%= product.category.name %></p>
+          <h1><%= product.name %></h1>
+          <h4><span>₱</span><%= product.price.toFixed(2) %></h4>
+
+          <!-- Product Option Selection -->
+          <% let hasSize = false; %>
+          <% product.attributes.forEach(attr => { %>
+            <% if (attr.name && attr.name !== 'Size') { %>
+              <% hasSize = true; %>
+            <% } %>
+          <% }); %>
+
+          <% if (hasSize) { %>
+            <select>
+              <% product.attributes.forEach(attr => { %>
+                <% if (attr.name === 'Size') { %>
+                  <option><%= attr.value %></option>
+                <% } %>
+              <% }); %>
+            </select>
+          <% } %>
+
           <input type="number" value="1" />
           <a href="" class="btn">Add To Cart</a>
 
+          <!-- Product Description -->
           <h3>Product Details <i class="fas fa-indent"></i></h3>
           <br />
-          <p>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Alias,
-            accusamus soluta quasi illum, deserunt ut iste rem obcaecati
-            inventore, est harum repellendus fuga velit odio sint officia
-            corrupti eum perspiciatis.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- title -->
-    <div class="small-container">
-      <div class="row row-2">
-        <h2>Related Products</h2>
-        <p>View more</p>
-      </div>
-    </div>
-
-    <!-- products -->
-
-    <div class="small-container">
-      <div class="row">
-        <div class="col-4">
-          <img src="https://i.ibb.co/47Sk9QL/product-1.jpg" alt="" />
-          <h4>Red Printed T-shirt</h4>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
-          </div>
-          <p>₹500.00</p>
-        </div>
-
-        <div class="col-4">
-          <img src="https://i.ibb.co/b7ZVzYr/product-2.jpg" alt="" />
-          <h4>Red Printed T-shirt</h4>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
-            <i class="far fa-star"></i>
-          </div>
-          <p>₹500.00</p>
-        </div>
-
-        <div class="col-4">
-          <img src="https://i.ibb.co/KsMVr26/product-3.jpg" alt="" />
-          <h4>Red Printed T-shirt</h4>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-          </div>
-          <p>₹500.00</p>
-        </div>
-
-        <div class="col-4">
-          <img src="https://i.ibb.co/0cMfpcr/product-4.jpg" alt="" />
-          <h4>Red Printed T-shirt</h4>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
-            <i class="far fa-star"></i>
-            <i class="far fa-star"></i>
-          </div>
-          <p>₹500.00</p>
+          <p><%= product.description || 'No description available' %></p>
         </div>
       </div>
     </div>
 
     <!-- Footer -->
     <div class="footer">
-      <!-- Footer goes here -->
+      <!-- Footer content here -->
     </div>
 
     <!-- js for toggle menu -->
@@ -597,19 +514,11 @@
     <script>
       var ProductImg = document.getElementById('ProductImg');
       var SmallImg = document.getElementsByClassName('small-img');
-      SmallImg[0].onclick = function() {
-        ProductImg.src = SmallImg[0].src;
-      };
-      SmallImg[1].onclick = function() {
-        ProductImg.src = SmallImg[1].src;
-      };
-      SmallImg[2].onclick = function() {
-        ProductImg.src = SmallImg[2].src;
-      };
-      SmallImg[3].onclick = function() {
-        ProductImg.src = SmallImg[3].src;
-      };
+      for (let i = 0; i < SmallImg.length; i++) {
+        SmallImg[i].onclick = function() {
+          ProductImg.src = SmallImg[i].src;
+        };
+      }
     </script>
   </body>
 </html>
-
