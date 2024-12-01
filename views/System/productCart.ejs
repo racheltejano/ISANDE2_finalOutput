@@ -6,35 +6,85 @@
     <title>Shopping Cart</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa; /* Light background */
             margin: 0;
             padding: 20px;
         }
+        h1 {
+            color: #333333; /* Darker text for the heading */
+            text-align: center;
+            margin-bottom: 20px;
+        }
         table {
             width: 100%;
-            border-collapse: collapse; /* Merge borders */
-            margin-bottom: 20px; /* Add space below the table */
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+            border-radius: 8px; /* Rounded corners */
+            overflow: hidden; /* Prevent overflow from rounded corners */
         }
         th, td {
-            border: 1px solid #ddd; /* Add borders to cells */
-            padding: 12px; /* Add padding for better spacing */
-            text-align: left; /* Align text to the left */
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
         }
         th {
-            background-color: #f2f2f2; /* Light gray background for headers */
+            background-color: #333333; /* Primary color for headers */
+            color: white; /* White text for contrast */
+        }
+        tr:hover {
+            background-color: #f1f1f1; /* Highlight row on hover */
         }
         .totals {
-            margin-top: 20px; /* Add space above totals */
-            text-align: left; /* Align totals to the left */
+            margin-top: 20px;
+            text-align: left;
+            background-color: #ffffff; /* White background for totals */
+            padding: 15px;
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .totals-item {
-            margin-bottom: 10px; /* Add space between totals */
-            display: flex; /* Use flexbox for alignment */
-            justify-content: space-between; /* Space between label and value */
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
         }
         .totals-value {
-            text-align: right; /* Align values to the right */
-            flex: 1; /* Allow the value to take available space */
+            text-align: right;
+            flex: 1;
+            font-weight: bold; /* Bold for emphasis */
+            color: #333333; /* Use primary color for totals */
+        }
+        .checkout {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #333333; /* Primary color for checkout button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        .checkout:hover {
+            background-color: #555555; /* Darker shade on hover */
+        }
+        input[type="number"] {
+            width: 60px; /* Fixed width for quantity input */
+            text-align: center; /* Center text */
+        }
+        .product-removal button {
+            background-color: #dc3545; /* Bootstrap danger color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        .product-removal button:hover {
+            background-color: #c82333; /* Darker red on hover */
         }
     </style>
 </head>
@@ -75,7 +125,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         /* Set rates + misc */
-        var shippingRate = 15.00; 
+        var shippingRate = 49.00; 
         var fadeTime = 300;
 
         /* Assign actions */
