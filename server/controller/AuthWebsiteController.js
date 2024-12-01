@@ -67,7 +67,6 @@ const authWebsiteController = {
       // Clear the cookie
       res.clearCookie('connect.sid', { path: '/' }); // Specify the same path as the cookie
 
-      console.log("LOGGED OUT!");
       return res.status(200).send('Logged out successfully.');
     });
   },
