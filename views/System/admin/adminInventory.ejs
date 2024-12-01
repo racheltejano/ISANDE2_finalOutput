@@ -103,22 +103,52 @@
       // Fetch product details and display in the modal
       const product = <%- JSON.stringify(inventory) %>.find(p => p.id === productId);
       const modalBody = document.getElementById('modalBody');
-      modalBody.innerHTML = `
+
+
+      // Create carousel for images
+      const imageCarouselHTML = `
         <h2>${product.name}</h2>
+        <div class="image-carousel" id="imageCarousel">
+          ${product.images.map((img, index) => 
+            `<img src="${img.image_url}" alt="${product.name}" class="carousel-image ${index === 0 ? 'active' : ''}" />`
+          ).join('')}
+          <button class="carousel-arrow left" onclick="changeImage(-1)">&#10094;</button>
+          <button class="carousel-arrow right" onclick="changeImage(1)">&#10095;</button>
+        </div>
         <p><strong>Price:</strong> ₱${product.price.toFixed(2)}</p>
         <p><strong>Stock:</strong> ${product.stock}</p>
         <p><strong>Seller:</strong> ${product.seller}</p>
         <p><strong>Category:</strong> ${product.category}</p>
         <h3>Images</h3>
-        ${product.images.map(img => `<img src="${img.image_url}" alt="${product.name}" />`).join('')}
         <h3>Attributes</h3>
         ${product.attributes.map(attr => `<p>${attr.name}: ${attr.value}</p>`).join('')}
       `;
+      
+      modalBody.innerHTML = imageCarouselHTML;
       document.getElementById('detailsModal').style.display = 'block';
     }
 
     function closeModal() {
       document.getElementById('detailsModal').style.display = 'none';
+    }
+
+    let currentImageIndex = 0;
+
+    function changeImage(direction) {
+      const images = document.querySelectorAll('#imageCarousel .carousel-image');
+      currentImageIndex += direction;
+
+      if (currentImageIndex >= images.length) {
+        currentImageIndex = 0;
+      } else if (currentImageIndex < 0) {
+        currentImageIndex = images.length - 1;
+      }
+
+      // Remove 'active' class from all images
+      images.forEach(img => img.classList.remove('active'));
+      
+      // Add 'active' class to the current image
+      images[currentImageIndex].classList.add('active');
     }
   </script>
 </body>

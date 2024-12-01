@@ -901,5 +901,78 @@ border-radius: 10px;
 }
 
 
+/* //////////////////////////////////////////////////////////////////////// */
+/*                     ADMIN: INVENTORY PAGE (POP-UP)                       */
+/* //////////////////////////////////////////////////////////////////////// */
 
+/* Styles specific to the product image carousel in the modal */
+#detailsModal .image-carousel {
+  width: 300px; /* Fixed width for the square frame */
+  height: 300px; /* Fixed height for the square frame */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+}
 
+#detailsModal .carousel-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: none; /* Initially hide all images */
+}
+
+#detailsModal .carousel-image.active {
+  display: block; /* Show only the active image */
+}
+
+#detailsModal .carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+#detailsModal .carousel-arrow.left {
+  left: 10px;
+}
+
+#detailsModal .carousel-arrow.right {
+  right: 10px;
+}
+
+/* Additional styles to ensure the modal looks good */
+#detailsModal .modal-content {
+  position: relative;
+  width: 80%;
+  max-width: 600px;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#detailsModal .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+#detailsModal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
