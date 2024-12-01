@@ -22,17 +22,19 @@
           <form action="/admin/inventory" method="get" class="filter-section">
             <!-- Category Filter -->
             <label for="category">Category:</label>
-              <select name="category" id="category" onchange="this.form.submit()">
-                  <option value="">Select Category</option>
-                      <% categories.forEach(category => { %>
-                          <option value="<%= category.category_id %>"><%= category.category_name %></option>
-                      <% }) %>
-              </select>
+            <select name="category" id="category" onchange="this.form.submit()">
+                <% categories.forEach(category => { %>
+                    <option value="<%= category.category_id %>" 
+                        <%= category.category_id == selectedCategory ? 'selected' : '' %> >
+                        <%= category.category_name %>
+                    </option>
+                <% }) %>
+            </select>
+
 
             <!-- Seller Filter -->
             <label for="seller">Seller:</label>
             <select name="seller" id="seller" onchange="this.form.submit()">
-                <option value="all" <%= selectedSeller === 'all' ? 'selected' : '' %>>All Sellers</option>
                 <% sellers.forEach(seller => { %>
                     <option value="<%= seller.seller_id %>" <%= seller.seller_id === selectedSeller ? 'selected' : '' %>>
                         <%= seller.name %>
