@@ -1,5 +1,43 @@
 const supabase = require('../database/supabaseClient');
 
+// Fetch products for the homepage
+const fetchProducts = async () => {
+  try {
+    const { data: products, error } = await supabase
+      .from('products')
+      .select(`
+        product_id,
+        name,
+        price,
+        product_images (image_url)
+      `)
+      .gte('product_id', 54); // Only fetch products with product_id >= 54
+
+    if (error) {
+      console.error('Error fetching products:', error);
+      throw error;
+    }
+
+    return products;
+  } catch (err) {
+    console.error('Unexpected error fetching products:', err);
+    throw err;
+  }
+};
+
+// Controller for homepage
+exports.getHomepage = async (req, res) => {
+  try {
+    const products = await fetchProducts();
+
+    // Pass the products to the EJS template
+    return res.render('website/index', { products });
+  } catch (err) {
+    console.error('Error rendering homepage:', err);
+    res.status(500).send('Server Error');
+  }
+};
+
 // Function to fetch product details by ID from the database
 // Params: 
 //   productId (string): The unique identifier of the product to fetch.

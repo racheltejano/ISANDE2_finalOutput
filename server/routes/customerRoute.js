@@ -12,4 +12,7 @@ router.get('/product-cart/product/:id', customerController.getProductsByID);
 
 router.post('/product-cart/order', customerController.postCart);
 
+// Route for homepage
+router.get('/website', customerController.getHomepage);
+
 module.exports = router;
