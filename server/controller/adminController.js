@@ -5,7 +5,7 @@ const getPendingSellersCount = async (req, res, next) => {
     try {
         const { count, error } = await supabaseClient
             .from('sellers')
-            .select('seller_id', { count: 'exact' }) // Use `seller_id` for this specific query
+            .select('seller_id', { count: 'exact' }) 
             .eq('approval_status', false);
 
         if (error) {
@@ -13,14 +13,13 @@ const getPendingSellersCount = async (req, res, next) => {
             return res.status(500).json({ message: 'Failed to fetch pending sellers count' });
         }
 
-        req.pendingSellersCount = count || 0; // Attach count to request object for the dashboard
-        next(); // Move to the next middleware or route handler
+        req.pendingSellersCount = count || 0; 
+        next(); 
     } catch (err) {
         console.error('Unexpected error fetching pending sellers count:', err);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
 const getProductCount = async () => {
     const { count, error } = await supabaseClient
         .from('products')
@@ -35,12 +34,14 @@ const getProductCount = async () => {
 };
 
 
+
+
 // Function to get pending sellers
 const getPendingSellers = async (req, res) => {
     try {
-        // Fetch sellers with approval_status = false from Supabase
+       
         const { data: sellers, error } = await supabaseClient
-            .from('sellers') // Replace 'sellers' with your table name
+            .from('sellers') 
             .select('*, user:users(username)')
             .eq('approval_status', false);
 
@@ -63,11 +64,10 @@ const getPendingSellers = async (req, res) => {
 // Function to update seller approval status
 const updateSellerApproval = async (req, res) => {
     const { sellerId } = req.params;
-    const { action } = req.body; // Either 'approve' or 'reject'
+    const { action } = req.body; 
 
     try {
         if (action === 'approve') {
-            // Approve the seller: update approval_status to true
             const { error } = await supabaseClient
                 .from('sellers')
                 .update({ approval_status: true })
@@ -78,7 +78,6 @@ const updateSellerApproval = async (req, res) => {
                 return res.status(500).json({ success: false, message: 'Failed to approve seller' });
             }
         } else if (action === 'reject') {
-            // Reject the seller: delete the seller from the database
             const { error } = await supabaseClient
                 .from('sellers')
                 .delete()
@@ -98,6 +97,39 @@ const updateSellerApproval = async (req, res) => {
 };
 
 
+// Function to fetch summarized inventory data
+const getInventorySummary = async () => {
+    try {
+        // Fetch top 5 products sorted by stock
+        const { data: products, error } = await supabaseClient
+            .from('products')
+            .select('name, stock') 
+            .order('stock', { ascending: true }) 
+            .limit(10); 
+
+        if (error) {
+            console.error('Error fetching inventory summary:', error);
+            throw error;
+        }
+
+        // Categorize products into stock statuses
+        const inventorySummary = products.map(product => ({
+            name: product.name,
+            stock: product.stock,
+            status: product.stock === 0
+                ? 'Out of Stock'
+                : product.stock < 10
+                ? 'Low Stock'
+                : 'In Stock',
+        }));
+
+
+        return inventorySummary;
+    } catch (err) {
+        console.error('Error in getInventorySummary:', err);
+        throw err;
+    }
+};
 
 
 // Function to fetch products
@@ -120,14 +152,10 @@ const fetchProducts = async (categoryFilter, sellerFilter, viewFilter) => {
     if (categoryFilter && categoryFilter !== 'all') {
         query = query.eq('category_id', categoryFilter);
     }
-
-    // Apply seller filter
     if (sellerFilter && sellerFilter !== 'all') {
         console.log(`Filtering by seller_id: ${sellerFilter}`);
-        query = query.eq('seller_id', sellerFilter);  // Ensure 'seller_id' is the correct column name
+        query = query.eq('seller_id', sellerFilter);  
     }
-
-    // Apply view filter (e.g., in-stock or out-of-stock products)
     if (viewFilter) {
         if (viewFilter === 'inStock') {
             query = query.gt('stock', 0);
@@ -197,18 +225,16 @@ const getInventory = async (req, res) => {
 
 
     try {
-        // Fetch total product count
         let productCount = 0;
         try {
             productCount = await getProductCount();
         } catch (countError) {
             console.error('Error fetching product count:', countError);
-            productCount = 0; // Fallback if count fails
+            productCount = 0; 
         }
 
         const products = await fetchProducts(categoryFilter, sellerFilter, viewFilter);
         const inventory = formatInventory(products);
-
         const categories = await fetchCategories();
         const sellers = await fetchSellers();
 
@@ -233,5 +259,6 @@ module.exports = {
     getPendingSellers,
     updateSellerApproval,
     getInventory,
-    getProductCount
+    getProductCount,
+    getInventorySummary
 };
