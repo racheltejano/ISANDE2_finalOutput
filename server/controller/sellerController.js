@@ -117,11 +117,23 @@ exports.dashboard = async (req, res) => {
         return res.status(403).send('Unauthorized: User is not a seller.');
       }
 
+      // Fetch the seller_id for the logged-in user
+    const { data: seller, error: sellerError } = await supabase
+    .from('sellers')
+    .select('seller_id')
+    .eq('user_id', user_id)
+    .single();
+
+      if (sellerError || !seller) {
+        throw new Error('Seller not found or unable to fetch seller details.');
+      }
+
+      const seller_id = seller.seller_id;
 
       const { data: products, error: productsError } = await supabase
       .from('products')
       .select('*')
-      .eq('seller_id', user_id);
+      .eq('seller_id', seller_id);
 
       if (productsError) throw productsError;
 
