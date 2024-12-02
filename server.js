@@ -78,6 +78,9 @@ const customerRoute = require('./server/routes/customerRoute');
 app.use('/customer', customerRoute); 
 
 
+app.get('/customer/product-cart', (req, res) => {
+  res.render('product-cart'); // Ensure 'product-cart.ejs' exists in your views folder
+});
 
 
 
