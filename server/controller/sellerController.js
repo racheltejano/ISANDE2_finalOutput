@@ -184,22 +184,118 @@ exports.inventory = async (req, res) => {
 // Out-of-Stock Items
 exports.outOfStockItems = async (req, res) => {
   try {
+    console.log("Entering outOfStockItems function");
+
+    // Fetch the logged-in user's ID from the session
+    const user_id = req.session.user?.user_id; // Logged-in user's ID
+    console.log("User ID:", user_id);
+
+    if (!user_id) {
+      return res.status(401).send("Unauthorized access. Please log in.");
+    }
+
+    // Fetch seller_id from sellers table and ensure it belongs to the logged-in user
+    const { data: sellerData, error: sellerError } = await supabase
+      .from('sellers')
+      .select('seller_id, user_id')
+      .eq('user_id', user_id)
+      .single(); // Assuming each user has only one seller entry
+
+    if (sellerError) throw sellerError;
+
+    const seller_id = sellerData?.seller_id;
+    console.log("Seller ID:", seller_id);
+
+    // Double-check: ensure the `user_id` from the session matches the fetched seller's `user_id`
+    if (!sellerData || sellerData.user_id !== user_id) {
+      return res.status(403).send("Forbidden. You don't have access to this data.");
+    }
+
+    // Query products table for out-of-stock items belonging to the seller
+    const { data: products, error: productsError } = await supabase
+      .from('products')
+      .select('*')
+      .eq('seller_id', seller_id)
+      .eq('stock', 0);
+
+    console.log("Products fetched:", products);
+
+    if (productsError) throw productsError;
+
+    // Render the EJS template with the out-of-stock products
+    res.render('System/seller/outOfStockItems', { products });
+  } catch (err) {
+    console.error("Error fetching out-of-stock items:", err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+
+
+
+// Get Edit Stock Page
+exports.getEditStockPage = async (req, res) => {
+  try {
+    const { product_id } = req.params;
     const user_id = req.session.user?.user_id;
+
     if (!user_id || !(await exports.isSeller(user_id))) {
       return res.status(403).send('Unauthorized: User is not a seller.');
     }
 
-    const { data: products, error: productsError } = await supabase
+    // Fetch the product details to pre-fill the stock value
+    const { data: product, error: productError } = await supabase
       .from('products')
       .select('*')
+      .eq('product_id', product_id)
       .eq('seller_id', user_id)
-      .eq('stock', 0);
+      .single();
 
-    if (productsError) throw productsError;
+    if (productError || !product) {
+      return res.status(404).send('Product not found.');
+    }
 
-    res.render('seller/outOfStockItems', { products });
+    res.render('System/seller/editStock', { product });
   } catch (err) {
-    console.error('Error fetching out-of-stock items:', err.message);
+    console.error('Error fetching product for editing stock:', err.message);
     res.status(500).send('Server Error');
   }
 };
+
+
+// Update Stock
+exports.updateStock = async (req, res) => {
+  try {
+    const { product_id } = req.params;
+    const { stock } = req.body;
+    const user_id = req.session.user?.user_id;
+
+    if (!user_id || !(await exports.isSeller(user_id))) {
+      return res.status(403).send('Unauthorized: User is not a seller.');
+    }
+
+    // Validate stock input
+    if (!stock || isNaN(stock) || stock < 0) {
+      return res.status(400).send('Invalid stock value.');
+    }
+
+    // Update stock in the database
+    const { data: updatedProduct, error } = await supabase
+      .from('products')
+      .update({ stock: new_stock })
+      .eq('product_id', product_id)
+      .select()
+      .single();
+
+      if (error || !updatedProduct) {
+        return res.status(500).send('Error updating stock.');
+      }
+
+      res.render('System/seller/outOfStockItems', { products });
+
+
+    } catch (err) {
+      console.error('Error fetching out-of-stock items:', err.message);
+      res.status(500).send('Server Error');
+    }
+  };
