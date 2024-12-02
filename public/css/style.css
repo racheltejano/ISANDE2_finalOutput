@@ -616,6 +616,8 @@ border-radius: 10px;
 
 .admin-dashboard .table-box table th {
   font-size: 16px;
+  cursor: pointer; 
+  transition: all 0.3s ease;
 }
 
 .admin-dashboard .table-box table td {
@@ -623,8 +625,10 @@ border-radius: 10px;
   color: #7f8c8d;
 }
 
+
 .admin-dashboard .table-box table tr:hover {
   background-color: #f4f4f4;
+  color: #000;
 }
 
 /* STATUS COLORS */

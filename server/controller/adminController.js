@@ -97,7 +97,38 @@ const updateSellerApproval = async (req, res) => {
     }
 };
 
+// Function to fetch summarized inventory data
+const getInventorySummary = async () => {
+    try {
+        // Fetch top 5 products sorted by stock
+        const { data: products, error } = await supabaseClient
+            .from('products')
+            .select('name, stock') // Fetch only required fields
+            .order('stock', { ascending: true }) // Sort by stock
+            .limit(5); // Limit to top 5 products
 
+        if (error) {
+            console.error('Error fetching inventory summary:', error);
+            throw error;
+        }
+
+        // Categorize products into stock statuses
+        const inventorySummary = products.map(product => ({
+            name: product.name,
+            stock: product.stock,
+            status: product.stock === 0
+                ? 'Out of Stock'
+                : product.stock < 10
+                ? 'Low Stock'
+                : 'In Stock',
+        }));
+
+        return inventorySummary;
+    } catch (err) {
+        console.error('Error in getInventorySummary:', err);
+        throw err;
+    }
+};
 
 
 // Function to fetch products
@@ -233,5 +264,6 @@ module.exports = {
     getPendingSellers,
     updateSellerApproval,
     getInventory,
-    getProductCount
+    getProductCount,
+    getInventorySummary,
 };

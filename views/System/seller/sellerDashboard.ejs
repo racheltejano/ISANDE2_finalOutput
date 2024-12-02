@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel</title>
+  <title>Seller Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="/css/style.css"> 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="admin-dashboard">
+  <div class="seller-dashboard">
     <div class="container">
       <!-- Sidebar -->
       <aside class="sidebar">
-        <%- include('../../partials/sidebarAdmin') %>
+        <%- include('../../partials/sidebarSeller') %>
     </aside>
       
       <!-- Main Content -->
@@ -31,13 +31,13 @@
               <h3>Total Earnings</h3>
               <p>$450,000</p>
             </div>
-            <div class="card" onclick="location.href='/admin/inventory'" style="cursor: pointer;">
+            <div class="card" onclick="location.href='/seller/inventory'" style="cursor: pointer;">
               <h3>All Products</h3>
               <p><%= productCount %></p>
             </div>
-            <div class="card" onclick="location.href='/admin/seller-approval'" style="cursor: pointer;">
-              <h3>Pending Sellers</h3>
-              <p><%= pendingSellersCount %></p>
+            <div class="card" onclick="location.href='/seller/out-of-stock-items'" style="cursor: pointer;">
+              <h3>Out of Stock Items</h3>
+              <p><%= outOfStockItemsCount %></p>
             </div>          
             <div class="card">
               <h3>Pending Orders</h3>
@@ -55,38 +55,39 @@
             </div>
           </div>
         </section>
-        
 
-        
         <!-- Tables -->
         <section class="table-container">
-          <!-- Inventory List Section -->
+          <!-- Inventory List -->
           <div class="table-box">
             <h3>Inventory List</h3>
             <table>
               <thead>
                 <tr>
-                  <th onclick="location.href='/admin/inventory'">Product</th>
-                  <th onclick="location.href='/admin/inventory'">Stock</th>
-                  <th onclick="location.href='/admin/inventory'">Status</th>
+                  <th>Product</th>
+                  <th>Stock</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
-                <% inventorySummary.forEach(product => { %>
-                  <tr>
-                    <td><%= product.name %></td>
-                    <td><%= product.stock %></td>
-                    <td>
-                      <span class="status-<%= product.status.replace(' ', '-').toLowerCase() %>">
-                        <%= product.status %>
-                      </span>
-                    </td>
-                  </tr>
-                <% }); %>
+                <tr>
+                  <td>Product 1</td>
+                  <td>50</td>
+                  <td><span class="status-in-stock">In Stock</span></td>
+                </tr>
+                <tr>
+                  <td>Product 2</td>
+                  <td>10</td>
+                  <td><span class="status-low-stock">Low Stock</span></td>
+                </tr>
+                <tr>
+                  <td>Product 3</td>
+                  <td>0</td>
+                  <td><span class="status-out-of-stock">Out of Stock</span></td>
+                </tr>
               </tbody>
             </table>
           </div>
-
           
           <!-- Order List -->
           <div class="table-box">
@@ -119,7 +120,6 @@
   </div>
   <!-- Chart.js Script -->
   <script>
-  
     const ctx = document.getElementById('inventoryChart').getContext('2d');
     new Chart(ctx, {
       type: 'pie',
