@@ -905,8 +905,8 @@ border-radius: 10px;
 
 /* Styles specific to the product image carousel in the modal */
 #detailsModal .image-carousel {
-  width: 300px; /* Fixed width for the square frame */
-  height: 300px; /* Fixed height for the square frame */
+  width: 30vh; /* Fixed width for the square frame */
+  height: 30vh; /* Fixed height for the square frame */
   position: relative;
   overflow: hidden;
   display: flex;
@@ -954,6 +954,7 @@ border-radius: 10px;
   background: #fff;
   padding: 20px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 10vh;
 }
 
 #detailsModal .close {
@@ -973,6 +974,7 @@ border-radius: 10px;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
+  overflow: none;
 }
 
 /* //////////////////////////////////////////////////////////////////////// */
