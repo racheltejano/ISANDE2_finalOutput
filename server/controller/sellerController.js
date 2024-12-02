@@ -98,3 +98,53 @@ exports.addProduct = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+// Seller Dashboard
+exports.dashboard = async (req, res) => {
+  try {
+      // Fetch the total product count
+      const productCount = await getProductCount();
+      
+      // Fetch the out-of-stock product count
+      const outOfStockItems = await fetchProducts(null, null, 'outOfStock');
+      const outOfStockItemsCount = outOfStockItems.length;
+
+      // You can also fetch other necessary data like pending orders or earnings here
+      const pendingOrdersCount = 56; // Example static data
+      const totalEarnings = 450000; // Example static data
+
+      // Pass the data to the view
+      res.render('seller/dashboard', {
+          productCount,
+          outOfStockItemsCount,
+          pendingOrdersCount,
+          totalEarnings
+      });
+  } catch (error) {
+      console.error("Error fetching dashboard data: ", error);
+      res.status(500).send("Error fetching dashboard data.");
+  }
+};
+
+// All Products page
+exports.inventory = async (req, res) => {
+  try {
+    const products = await Product.find(); // Get all products
+    res.render('seller/inventory', { products });
+  } catch (error) {
+    console.error("Error fetching inventory: ", error);
+    res.status(500).send("Server Error");
+  }
+};
+
+// Out of Stock Items page
+exports.outOfStockItems = async (req, res) => {
+  try {
+    const outOfStockItems = await Product.find({ stock: 0 }); // Get all out-of-stock products
+    res.render('seller/outOfStockItems', { outOfStockItems });
+  } catch (error) {
+    console.error("Error fetching out-of-stock items: ", error);
+    res.status(500).send("Server Error");
+  }
+};
+
