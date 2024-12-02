@@ -104,8 +104,9 @@ const getInventorySummary = async () => {
         const { data: products, error } = await supabaseClient
             .from('products')
             .select('name, stock') 
+            .eq('status', true)
             .order('stock', { ascending: true }) 
-            .limit(10); 
+            .limit(5); 
 
         if (error) {
             console.error('Error fetching inventory summary:', error);

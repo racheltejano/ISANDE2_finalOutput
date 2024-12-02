@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="/css/style.css"> 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
   <div class="admin-dashboard">
@@ -24,38 +25,54 @@
           <!-- Flashcards -->
           <div class="flashcards">
             <div class="card">
+              <span class="material-icons">shopping_cart</span>
               <h3>Total Orders</h3>
               <p>123,254</p>
             </div>
             <div class="card">
+              <span class="material-icons">attach_money</span>
               <h3>Total Earnings</h3>
               <p>$450,000</p>
             </div>
+            <div class="card" onclick="location.href='seller/add-product'" style="cursor: pointer;">
+              <span class="material-icons">add_circle</span>
+              <h3>Add a New Product</h3>
+            </div>
             <div class="card" onclick="location.href='/seller/inventory'" style="cursor: pointer;">
+              <span class="material-icons">inventory_2</span>
               <h3>All Products</h3>
               <p><%= productCount %></p>
             </div>
             <div class="card" onclick="location.href='/seller/out-of-stock-items'" style="cursor: pointer;">
+              <span class="material-icons">warning</span>
               <h3>Out of Stock Items</h3>
               <p><%= outOfStockItemsCount %></p>
-            </div>          
+            </div>
             <div class="card">
+              <span class="material-icons">pending_actions</span>
               <h3>Pending Orders</h3>
               <p>56</p>
             </div>
           </div>
+          
         
+          
           <!-- Pie Chart -->
           <div class="chart-container">
             <canvas id="inventoryChart"></canvas>
+            
             <div class="chart-legend">
               <span><i style="background-color: #4caf50;"></i> In Stock</span>
               <span><i style="background-color: #ff9800;"></i> Low Stock</span>
               <span><i style="background-color: #f44336;"></i> Out of Stock</span>
             </div>
-          </div>
-        </section>
+            
 
+          </div>
+          
+          <br/><br/><br/><br/><br/><br/>
+        </section>
+        <br/><br/><br/><br/><br/><br/>
         <!-- Tables -->
         <section class="table-container">
           <!-- Inventory List -->

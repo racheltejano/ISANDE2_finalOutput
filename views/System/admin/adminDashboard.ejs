@@ -24,26 +24,32 @@
           <!-- Flashcards -->
           <div class="flashcards">
             <div class="card">
+              <span class="material-icons">shopping_cart</span>
               <h3>Total Orders</h3>
               <p>123,254</p>
             </div>
             <div class="card">
+              <span class="material-icons">attach_money</span>
               <h3>Total Earnings</h3>
               <p>$450,000</p>
             </div>
             <div class="card" onclick="location.href='/admin/inventory'" style="cursor: pointer;">
+              <span class="material-icons">inventory_2</span>
               <h3>All Products</h3>
               <p><%= productCount %></p>
             </div>
             <div class="card" onclick="location.href='/admin/seller-approval'" style="cursor: pointer;">
+              <span class="material-icons">person_add</span>
               <h3>Pending Sellers</h3>
               <p><%= pendingSellersCount %></p>
-            </div>          
+            </div>
             <div class="card">
+              <span class="material-icons">pending_actions</span>
               <h3>Pending Orders</h3>
               <p>56</p>
             </div>
           </div>
+          
         
           <!-- Pie Chart -->
           <div class="chart-container">
@@ -54,10 +60,9 @@
               <span><i style="background-color: #f44336;"></i> Out of Stock</span>
             </div>
           </div>
+          <br/><br/><br/><br/><br/>
         </section>
-        
-
-        
+        <br/><br/><br/><br/><br/>
         <!-- Tables -->
         <section class="table-container">
           <!-- Inventory List -->
