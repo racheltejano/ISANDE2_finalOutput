@@ -112,52 +112,58 @@ exports.addProduct = async (req, res) => {
 // Seller Dashboard
 exports.dashboard = async (req, res) => {
   try {
-      const user_id = req.session.user?.user_id;
-      if (!user_id || !(await exports.isSeller(user_id))) {
-        return res.status(403).send('Unauthorized: User is not a seller.');
-      }
+    const user_id = req.session.user?.user_id;
 
-      // Fetch the seller_id for the logged-in user
+    // Check if the user is logged in and is a seller
+    if (!user_id || !(await exports.isSeller(user_id))) {
+      return res.status(403).send('Unauthorized: User is not a seller.');
+    }
+
+    // Fetch the seller_id for the logged-in user
     const { data: seller, error: sellerError } = await supabase
-    .from('sellers')
-    .select('seller_id')
-    .eq('user_id', user_id)
-    .single();
+      .from('sellers')
+      .select('seller_id')
+      .eq('user_id', user_id)
+      .single();
 
-      if (sellerError || !seller) {
-        throw new Error('Seller not found or unable to fetch seller details.');
-      }
+    if (sellerError || !seller) {
+      throw new Error('Seller not found or unable to fetch seller details.');
+    }
 
-      const seller_id = seller.seller_id;
+    const seller_id = seller.seller_id;
 
-      const { data: products, error: productsError } = await supabase
+    // Fetch products for the seller where status is true
+    const { data: products, error: productsError } = await supabase
       .from('products')
       .select('*')
-      .eq('seller_id', seller_id);
+      .eq('seller_id', seller_id)
+      .eq('status', true); // Only include products with `status === true`
 
-      if (productsError) throw productsError;
+    if (productsError) throw productsError;
 
-      const productCount = products.length;
-      const outOfStockItemsCount = products.filter((product) => product.stock === 0).length;
+    // Count total products and out-of-stock products
+    const productCount = products.length;
+    const outOfStockItemsCount = products.filter((product) => product.stock === 0).length;
 
-      console.log("Out-of-stock count:", outOfStockItemsCount);
+    console.log("Out-of-stock count:", outOfStockItemsCount);
 
-      // You can also fetch other necessary data like pending orders or earnings here
-      const pendingOrdersCount = 56; // Example static data
-      const totalEarnings = 450000; // Example static data
+    // Example static data for pending orders and total earnings
+    const pendingOrdersCount = 56; // Example static data
+    const totalEarnings = 450000; // Example static data
 
-      // Pass the data to the view
-      res.render('System/seller/sellerDashboard', {
-        productCount,
-        outOfStockItemsCount,
-        pendingOrdersCount,
-        totalEarnings,
-      });
+    // Pass the filtered data to the view
+    res.render('System/seller/sellerDashboard', {
+      productCount,
+      outOfStockItemsCount,
+      pendingOrdersCount,
+      totalEarnings,
+    });
   } catch (error) {
-      console.error("Error fetching dashboard data: ", error);
-      res.status(500).send("Error fetching dashboard data.");
+    console.error("Error fetching dashboard data: ", error);
+    res.status(500).send("Error fetching dashboard data.");
   }
 };
+
 
 // All Products page
 exports.inventory = async (req, res) => {
@@ -184,10 +190,8 @@ exports.inventory = async (req, res) => {
 // Out-of-Stock Items
 exports.outOfStockItems = async (req, res) => {
   try {
-    console.log("Entering outOfStockItems function");
-
     // Fetch the logged-in user's ID from the session
-    const user_id = req.session.user?.user_id; // Logged-in user's ID
+    const user_id = req.session.user?.user_id; 
     console.log("User ID:", user_id);
 
     if (!user_id) {
@@ -216,13 +220,11 @@ exports.outOfStockItems = async (req, res) => {
       .from('products')
       .select('*')
       .eq('seller_id', seller_id)
-      .eq('stock', 0);
-
-    console.log("Products fetched:", products);
+      .eq('stock', 0)
+      .eq('status', true);
 
     if (productsError) throw productsError;
 
-    // Render the EJS template with the out-of-stock products
     res.render('System/seller/outOfStockItems', { products });
   } catch (err) {
     console.error("Error fetching out-of-stock items:", err.message);
@@ -268,34 +270,45 @@ exports.updateStock = async (req, res) => {
   try {
     const { product_id } = req.params;
     const { stock } = req.body;
-    const user_id = req.session.user?.user_id;
 
-    if (!user_id || !(await exports.isSeller(user_id))) {
-      return res.status(403).send('Unauthorized: User is not a seller.');
-    }
+    if (!req.session.user) return res.status(401).send('Unauthorized');
+    if (!stock || isNaN(stock) || stock < 0) return res.status(400).send('Invalid stock value.');
 
-    // Validate stock input
-    if (!stock || isNaN(stock) || stock < 0) {
-      return res.status(400).send('Invalid stock value.');
-    }
-
-    // Update stock in the database
-    const { data: updatedProduct, error } = await supabase
+    const { error } = await supabase
       .from('products')
-      .update({ stock: new_stock })
-      .eq('product_id', product_id)
-      .select()
-      .single();
+      .update({ stock })
+      .eq('product_id', product_id);
 
-      if (error || !updatedProduct) {
-        return res.status(500).send('Error updating stock.');
-      }
+    if (error) throw error;
 
-      res.render('System/seller/outOfStockItems', { products });
+    res.status(200).send('Stock updated successfully');
+  } catch (err) {
+    console.error('Error updating stock:', err.message);
+    res.status(500).send('Server error');
+  }
+};
 
 
-    } catch (err) {
-      console.error('Error fetching out-of-stock items:', err.message);
-      res.status(500).send('Server Error');
+exports.disableProduct = async (req, res) => {
+  try {
+    const { product_id } = req.params;
+
+    // Log the product_id to ensure it's being received
+    console.log("Disabling product with ID:", product_id);
+
+    const { error } = await supabase
+      .from('products')
+      .update({ status: disabled }) // Ensure `status` is the correct column
+      .eq('product_id', product_id); // Ensure `product_id` is the correct column
+
+    if (error) {
+      console.error("Supabase error:", error.message);
+      throw error;
     }
-  };
+
+    res.status(200).send('Product disabled successfully');
+  } catch (err) {
+    console.error('Error disabling product:', err.message);
+    res.status(500).send('Server error');
+  }
+};

@@ -3,15 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Out of Stock Items</title>
-  <link rel="stylesheet" href="/styles.css">
-  <script src="/path/to/your/jquery.js"></script> <!-- Include jQuery if needed -->
+  <title>Out of Stock / Low Stock Items</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 1em;
+      text-align: left;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    button {
+      padding: 5px 10px;
+      margin: 2px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+    .restock {
+      background-color: #28a745;
+      color: white;
+    }
+    .disable {
+      background-color: #dc3545;
+      color: white;
+    }
+    h1 {
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-
   <h1>Out of Stock / Low Stock Items</h1>
-
-  <table border="1">
+  <table>
     <thead>
       <tr>
         <th>Product Name</th>
@@ -21,77 +51,28 @@
       </tr>
     </thead>
     <tbody>
-      <% products.forEach(product => { %>
+      <% if (products.length > 0) { %>
+        <% products.forEach(product => { %>
+          <tr>
+            <td><%= product.name %></td>
+            <td><%= product.stock %></td>
+            <td>₱<%= product.price %></td>
+            <td>
+              <form method="POST" action="/seller/restock-product/<%= product.product_id %>" style="display:inline;">
+                <button type="submit" class="restock">Restock</button>
+              </form>
+              <form method="POST" action="/seller/disable-product/<%= product.product_id %>" style="display:inline;">
+                <button type="submit" class="disable">Disable</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      <% } else { %>
         <tr>
-          <td><%= product.name %></td>
-          <td><%= product.stock %></td>
-          <td><%= product.price %></td>
-          <td>
-            <button class="restock-btn" data-product-id="<%= product.product_id %>" data-current-stock="<%= product.stock %>">Restock</button>
-          </td>
+          <td colspan="4" style="text-align: center;">No out-of-stock items</td>
         </tr>
-      <% }) %>
+      <% } %>
     </tbody>
   </table>
-
-  <!-- Popup Modal for Editing Stock -->
-  <div id="restockModal" style="display: none;">
-    <div class="modal-content">
-      <h2>Restock Product</h2>
-      <form id="restockForm">
-        <input type="hidden" id="product_id" name="product_id" />
-        <label for="new_stock">New Stock Quantity:</label>
-        <input type="number" id="new_stock" name="new_stock" min="1" required>
-        <button type="submit">Update Stock</button>
-        <button type="button" id="closeModal">Cancel</button>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    // jQuery to open the modal
-    $(document).on('click', '.restock-btn', function() {
-      const productId = $(this).data('product-id');
-      const currentStock = $(this).data('current-stock');
-
-      // Fill the hidden input and current stock into the modal
-      $('#product_id').val(productId);
-      $('#new_stock').val(currentStock);
-
-      // Show the modal
-      $('#restockModal').show();
-    });
-
-    // Close the modal when the Cancel button is clicked
-    $('#closeModal').click(function() {
-      $('#restockModal').hide();
-    });
-
-    // Handle form submission for updating stock
-    $('#restockForm').submit(function(event) {
-      event.preventDefault();
-
-      const productId = $('#product_id').val();
-      const newStock = $('#new_stock').val();
-
-      // Send AJAX request to update stock
-      $.ajax({
-        type: 'POST',
-        url: `/seller/edit-stock/${productId}`,
-        data: { new_stock: newStock },
-        success: function(response) {
-          alert('Stock updated successfully!');
-          location.reload(); // Reload the page to show updated stock
-        },
-        error: function(error) {
-          alert('Error updating stock');
-        }
-      });
-
-      // Close modal
-      $('#restockModal').hide();
-    });
-  </script>
-
 </body>
 </html>

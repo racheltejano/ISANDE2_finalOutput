@@ -4,6 +4,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
+app.use(express.static('public'));
 
 
 // Middleware to serve static assets from the "public" directory
@@ -79,9 +80,12 @@ app.use('/customer', customerRoute);
 
 
 
+
 //Route for Sellers (System)
 //const sellerRoute = require('./server/routes/sellerRoute.js'); 
 //app.use('/seller', sellerRoute); 
+
+
 
 
 
