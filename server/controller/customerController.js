@@ -229,18 +229,18 @@ exports.postCart = async (req, res) => {
       .from('orders')
       .insert([
         {
-          customer_id,
-          total_amount,
-          payment_method,
-          method_id,
-          status_id,
+          customer_id: customer_id,
+          total_amount: total_amount,
+          payment_method_id: payment_method,
+          method_id: method_id,
+          status: "pending",
+          status_id: status_id,
         },
       ])
-      .select();
 
     // Handle any errors from Supabase
     if (error) {
-      console.error('Error inserting order:', error);
+      console.error('Error inserting order:', error.message);
       return res.status(500).json({ error: 'Error creating order' });
     }
 
