@@ -12,7 +12,7 @@
       document.getElementById('logoutLink').addEventListener('click', function(event) {
           event.preventDefault(); // Prevent the default anchor click behavior
   
-          fetch('/sellerLogin/sellerlogout', { // Adjusted URL for seller logout
+          fetch('/websiteLogin/websitelogout', { // Adjusted URL for seller logout
               method: 'GET',
               credentials: 'include' // Include cookies if needed
           })

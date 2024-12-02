@@ -1,16 +1,10 @@
-/*
-        Main Color (): Use this as the dominant background color for the website. Apply it to large sections like the header, footer, and card backgrounds.
-        Accent Color ( #333; when hovered #171616; ):Use sparingly for highlight elements such as buttons, icons, or section dividers.
-        Alert/Action Color (): Avoid if possible but use for things needing immediate action (out of stock, late orders, etc.)
-        Typography: Dark Gray
-*/
 
 /* Global Styles */
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
+  background-color: #e4e4e4;
   color: #333;
 }
 
