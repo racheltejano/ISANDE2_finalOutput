@@ -1,18 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const { getPendingSellers, updateSellerApproval, getInventory, getPendingSellersCount, getProductCount } = require('../controller/adminController');
+const { getPendingSellers, updateSellerApproval, getInventory, getPendingSellersCount, getProductCount, getInventorySummary } = require('../controller/adminController');
 
 
 // Consolidated dashboard route
 router.get('/dashboard', getPendingSellersCount, async (req, res) => {
     try {
-        // Fetch product count
+        // Fetch
         const productCount = await getProductCount();
+        const inventorySummary = await getInventorySummary();
 
-        // Render dashboard with both counts
+        // Render dashboard data
         res.render('System/admin/adminDashboard', {
-            pendingSellersCount: req.pendingSellersCount, // From middleware
-            productCount, // From database
+            pendingSellersCount: req.pendingSellersCount,
+            productCount, 
+            inventorySummary,
         });
     } catch (err) {
         console.error('Error rendering adminDashboard:', err);
@@ -21,13 +23,9 @@ router.get('/dashboard', getPendingSellersCount, async (req, res) => {
 });
 
 
-// GET route to render the admin seller approval page
+// working routes
 router.get('/seller-approval', getPendingSellers);
-// PUT route to handle approval or rejection of sellers
 router.put('/seller-action/:sellerId', updateSellerApproval);
-
-
-// Route to fetch inventory data (in-progress)
 router.get('/inventory', getInventory);
 
 module.exports = router;
