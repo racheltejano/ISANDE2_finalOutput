@@ -1,8 +1,23 @@
 const supabase = require('../database/supabaseClient');
 const cloudinary = require('../utils/cloudinary');
 const upload = require('../utils/multerConfig');
+const { getProductCount } = require('../controller/adminController');
 
 exports.uploadImages = upload.array('images');
+
+exports.isSeller = async (user_id) => {
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('role_id')
+    .eq('user_id', user_id)
+    .single();
+
+  if (error || !user) {
+    throw new Error('User not found or unable to fetch role.');
+  }
+
+  return user.role_id === 2; 
+};
 
 // Display the Add Product Page
 exports.getAddProductPage = async (req, res) => {
@@ -21,7 +36,7 @@ exports.getAddProductPage = async (req, res) => {
 exports.addProduct = async (req, res) => {
   try {
     const { name, category_id, price, stock, description, attributes } = req.body;
-    const user_id = req.session.user?.user_id; // Ensure session exists
+    const user_id = req.session.user?.user_id; 
 
     if (!user_id) {
       return res.status(401).send('Unauthorized: User not logged in.');
@@ -37,9 +52,7 @@ exports.addProduct = async (req, res) => {
       return res.status(403).send('Unauthorized: User is not a seller.');
     }
 
-    const seller_id = seller.seller_id; // Use this seller_id for adding the product
-    
-    // Insert the main product
+    const seller_id = seller.seller_id; 
     const { data: product, error: productError } = await supabase
       .from('products')
       .insert([{ seller_id, category_id, name, price, stock, description, status: true }])
@@ -47,11 +60,10 @@ exports.addProduct = async (req, res) => {
       .single();
     if (productError) throw productError;
 
-     // Parse attributes (dynamic inputs)
      if (req.body.attributes) {
-      const attributes = JSON.parse(req.body.attributes); // Parse JSON if sent as string
+      const attributes = JSON.parse(req.body.attributes); 
       for (const attribute of attributes) {
-        const { attribute_id, value } = attribute; // Ensure these keys exist
+        const { attribute_id, value } = attribute; 
         await supabase.from('product_attributes').insert({
           product_id: product.product_id,
           attribute_id,
@@ -60,15 +72,13 @@ exports.addProduct = async (req, res) => {
       }
     }
 
-    // In your addProduct method:
   if (req.files && req.files.length > 0) {
     for (const file of req.files) {
       try {
         console.log(req.files);
-        // Upload the image to Cloudinary (use async/await instead of the callback)
         const result = await cloudinary.uploader.upload(file.path, {
-          resource_type: 'auto', // Automatically detects file type (image, video, etc.)
-          public_id: `${product.product_id}/${file.originalname}`, // Use product_id to organize images
+          resource_type: 'auto', 
+          public_id: `${product.product_id}/${file.originalname}`, 
         });
 
         // Make sure the result contains a valid image URL
@@ -102,23 +112,34 @@ exports.addProduct = async (req, res) => {
 // Seller Dashboard
 exports.dashboard = async (req, res) => {
   try {
-      // Fetch the total product count
-      const productCount = await getProductCount();
-      
-      // Fetch the out-of-stock product count
-      const outOfStockItems = await fetchProducts(null, null, 'outOfStock');
-      const outOfStockItemsCount = outOfStockItems.length;
+      const user_id = req.session.user?.user_id;
+      if (!user_id || !(await exports.isSeller(user_id))) {
+        return res.status(403).send('Unauthorized: User is not a seller.');
+      }
+
+
+      const { data: products, error: productsError } = await supabase
+      .from('products')
+      .select('*')
+      .eq('seller_id', user_id);
+
+      if (productsError) throw productsError;
+
+      const productCount = products.length;
+      const outOfStockItemsCount = products.filter((product) => product.stock === 0).length;
+
+      console.log("Out-of-stock count:", outOfStockItemsCount);
 
       // You can also fetch other necessary data like pending orders or earnings here
       const pendingOrdersCount = 56; // Example static data
       const totalEarnings = 450000; // Example static data
 
       // Pass the data to the view
-      res.render('seller/dashboard', {
-          productCount,
-          outOfStockItemsCount,
-          pendingOrdersCount,
-          totalEarnings
+      res.render('System/seller/sellerDashboard', {
+        productCount,
+        outOfStockItemsCount,
+        pendingOrdersCount,
+        totalEarnings,
       });
   } catch (error) {
       console.error("Error fetching dashboard data: ", error);
@@ -129,22 +150,44 @@ exports.dashboard = async (req, res) => {
 // All Products page
 exports.inventory = async (req, res) => {
   try {
-    const products = await Product.find(); // Get all products
+    const user_id = req.session.user?.user_id;
+    if (!user_id || !(await exports.isSeller(user_id))) {
+      return res.status(403).send('Unauthorized: User is not a seller.');
+    }
+
+    const { data: products, error: productsError } = await supabase
+      .from('products')
+      .select('*')
+      .eq('seller_id', user_id);
+
+    if (productsError) throw productsError;
+
     res.render('seller/inventory', { products });
-  } catch (error) {
-    console.error("Error fetching inventory: ", error);
-    res.status(500).send("Server Error");
+  } catch (err) {
+    console.error('Error fetching inventory:', err.message);
+    res.status(500).send('Server Error');
   }
 };
 
-// Out of Stock Items page
+// Out-of-Stock Items
 exports.outOfStockItems = async (req, res) => {
   try {
-    const outOfStockItems = await Product.find({ stock: 0 }); // Get all out-of-stock products
-    res.render('seller/outOfStockItems', { outOfStockItems });
-  } catch (error) {
-    console.error("Error fetching out-of-stock items: ", error);
-    res.status(500).send("Server Error");
+    const user_id = req.session.user?.user_id;
+    if (!user_id || !(await exports.isSeller(user_id))) {
+      return res.status(403).send('Unauthorized: User is not a seller.');
+    }
+
+    const { data: products, error: productsError } = await supabase
+      .from('products')
+      .select('*')
+      .eq('seller_id', user_id)
+      .eq('stock', 0);
+
+    if (productsError) throw productsError;
+
+    res.render('seller/outOfStockItems', { products });
+  } catch (err) {
+    console.error('Error fetching out-of-stock items:', err.message);
+    res.status(500).send('Server Error');
   }
 };
-

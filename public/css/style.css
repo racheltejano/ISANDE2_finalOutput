@@ -980,3 +980,202 @@ border-radius: 10px;
   background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
+
+/* //////////////////////////////////////////////////////////////////////// */
+/*                              SELLER:DASHBOARD                            */
+/* //////////////////////////////////////////////////////////////////////// */
+
+
+
+/* Seller Dashboard Layout */
+.seller-dashboard .container {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Sidebar */
+.seller-dashboard .sidebar {
+  background-color: #2c3e50;
+  width: 250px;
+  height: 100vh;
+  padding: 20px 0;
+  position: fixed;
+  color: #ecf0f1;
+}
+
+.seller-dashboard .sidebar .logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.seller-dashboard .sidebar .logo img {
+  width: 80px;
+}
+
+.seller-dashboard .sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.seller-dashboard .sidebar ul li {
+  margin: 20px 0;
+}
+
+.seller-dashboard .sidebar ul li a {
+  text-decoration: none;
+  color: #ecf0f1;
+  font-size: 18px;
+  padding: 10px 20px;
+  display: block;
+}
+
+.seller-dashboard .sidebar ul li a:hover {
+  background-color: #34495e;
+  border-radius: 5px;
+}
+
+/* Main Content */
+.seller-dashboard .main-content {
+  margin-left: 250px;
+  padding: 20px;
+  width: calc(100% - 250px);
+}
+
+/* First Row Styling */
+.seller-dashboard .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.seller-dashboard .flashcards {
+  display: grid;
+  grid-template-rows: 1fr 1fr; /* Two rows of equal height */
+  grid-template-columns: repeat(3, 1fr); /* Three equal columns */
+  gap: 1rem;
+  flex: 1;
+  height: calc(250px + 1rem); /* Match the height of the pie chart (including gap) */
+}
+
+.seller-dashboard .flashcards .card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.seller-dashboard .flashcards .card:hover {
+  transform: scale(1.05);
+}
+
+.seller-dashboard .flashcards .card h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.seller-dashboard .flashcards .card p {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.seller-dashboard .flashcards .card:nth-child(1),
+.seller-dashboard .flashcards .card:nth-child(2) {
+  grid-row: 1;
+  grid-column: span 1;
+}
+
+.seller-dashboard .flashcards .card:nth-child(3),
+.seller-dashboard .flashcards .card:nth-child(4) {
+  grid-row: 2;
+  grid-column: span 1;
+}
+
+.seller-dashboard .flashcards .card:nth-child(5) {
+  grid-row: 2;
+  grid-column: span 1;
+}
+
+/* Chart Container */
+/* Pie Chart Container */
+.chart-container {
+  width: 100%; /* Ensures it's responsive within its container */
+  max-width: 600px; /* Limits the maximum width of the chart */
+  height: 300px; /* Set a fixed height */
+  margin: 0 auto; /* Centers the chart */
+}
+
+
+
+.seller-dashboard .chart-legend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.seller-dashboard .chart-legend span {
+  display: flex;
+  align-items: center;
+}
+
+.seller-dashboard .chart-legend i {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  border-radius: 50%;
+}
+
+/* Table Container */
+.seller-dashboard .table-container {
+  margin-top: 2rem;
+}
+
+.seller-dashboard .table-box {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.seller-dashboard .table-box h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.seller-dashboard .table-box table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.seller-dashboard .table-box table th,
+.seller-dashboard .table-box table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.seller-dashboard .table-box table th {
+  background-color: #f4f4f4;
+}
+
+.seller-dashboard .table-box table td span.status-in-stock {
+  color: #4caf50;
+}
+
+.seller-dashboard .table-box table td span.status-low-stock {
+  color: #ff9800;
+}
+
+.seller-dashboard .table-box table td span.status-out-of-stock {
+  color: #f44336;
+}
+
+.seller-dashboard .table-box table tr:hover {
+  background-color: #f9f9f9;
+}

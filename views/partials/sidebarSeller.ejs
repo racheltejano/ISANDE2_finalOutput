@@ -1,0 +1,30 @@
+<ul>
+    <li><a href="/seller/dashboard"><i class="material-icons">dashboard</i> Dashboard</a></li>
+    <li><a href="/seller/inventory"><i class="material-icons">inventory</i> Inventory</a></li>
+    <li><a href="/seller/orders"><i class="material-icons">shopping_cart</i> Orders</a></li>
+    <li><a href="/seller/earnings"><i class="material-icons">account_balance_wallet</i> Earnings</a></li>
+    <li><a href="/seller/support"><i class="material-icons">help</i> Support</a></li>
+    <li><a href="/seller/settings"><i class="material-icons">settings</i> Settings</a></li>
+    <li><a href="#" id="logoutLink"><i class="material-icons">logout</i> Logout</a></li>
+  </ul>
+  
+  <script>
+      document.getElementById('logoutLink').addEventListener('click', function(event) {
+          event.preventDefault(); // Prevent the default anchor click behavior
+  
+          fetch('/sellerLogin/sellerlogout', { // Adjusted URL for seller logout
+              method: 'GET',
+              credentials: 'include' // Include cookies if needed
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Logout failed');
+              }
+            window.location.href = '/';
+          })
+          .catch(error => {
+              console.error('Error during logout:', error);
+          });
+      });
+  </script>
+  

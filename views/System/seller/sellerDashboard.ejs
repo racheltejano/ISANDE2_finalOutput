@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="/css/style.css"> 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="admin-dashboard">
+    <div class="container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <%- include('../../partials/sidebarSeller') %>
+      </aside>
+      
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- First Row -->
+        <section class="row">
+          <!-- Flashcards -->
+          <div class="flashcards">
+            <div class="card">
+              <h3>Total Orders</h3>
+              <p>123,254</p>
+            </div>
+            <div class="card">
+              <h3>Total Earnings</h3>
+              <p>$450,000</p>
+            </div>
+            <div class="card" onclick="location.href='/seller/inventory'" style="cursor: pointer;">
+              <h3>All Products</h3>
+              <p><%= productCount %></p>
+            </div>
+            <div class="card" onclick="location.href='/seller/out-of-stock-items'" style="cursor: pointer;">
+              <h3>Out of Stock Items</h3>
+              <p><%= outOfStockItemsCount %></p>
+            </div>          
+            <div class="card">
+              <h3>Pending Orders</h3>
+              <p>56</p>
+            </div>
+          </div>
+        
+          <!-- Pie Chart -->
+          <div class="chart-container">
+            <canvas id="inventoryChart"></canvas>
+            <div class="chart-legend">
+              <span><i style="background-color: #4caf50;"></i> In Stock</span>
+              <span><i style="background-color: #ff9800;"></i> Low Stock</span>
+              <span><i style="background-color: #f44336;"></i> Out of Stock</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tables -->
+        <section class="table-container">
+          <!-- Inventory List -->
+          <div class="table-box">
+            <h3>Inventory List</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Stock</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Product 1</td>
+                  <td>50</td>
+                  <td><span class="status-in-stock">In Stock</span></td>
+                </tr>
+                <tr>
+                  <td>Product 2</td>
+                  <td>10</td>
+                  <td><span class="status-low-stock">Low Stock</span></td>
+                </tr>
+                <tr>
+                  <td>Product 3</td>
+                  <td>0</td>
+                  <td><span class="status-out-of-stock">Out of Stock</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Order List -->
+          <div class="table-box">
+            <h3>Order List</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ORD001</td>
+                  <td>John Doe</td>
+                  <td>Shipped</td>
+                </tr>
+                <tr>
+                  <td>ORD002</td>
+                  <td>Jane Smith</td>
+                  <td>Pending</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  
+  <!-- Chart.js Script -->
+  <script>
+    const ctx = document.getElementById('inventoryChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['In Stock', 'Low Stock', 'Out of Stock'],
+        datasets: [{
+          data: [60, 25, 15],
+          backgroundColor: ['#4caf50', '#ff9800', '#f44336']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
