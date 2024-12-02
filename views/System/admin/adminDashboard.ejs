@@ -66,22 +66,23 @@
             <table>
               <thead>
                 <tr>
-                  <th>Product</th>
-                  <th>Stock</th>
-                  <th>Status</th>
+                  <th onclick="location.href='/admin/inventory'">Product</th>
+                  <th onclick="location.href='/admin/inventory'">Stock</th>
+                  <th onclick="location.href='/admin/inventory'">Status</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Product 1</td>
-                  <td>50</td>
-                  <td><span class="status-in-stock">In Stock</span></td>
-                </tr>
-                <tr>
-                  <td>Product 2</td>
-                  <td>10</td>
-                  <td><span class="status-low-stock">Low Stock</span></td>
-                </tr>
+                <% inventorySummary.forEach(product => { %>
+                  <tr>
+                    <td><%= product.name %></td>
+                    <td><%= product.stock %></td>
+                    <td>
+                      <span class="status-<%= product.status.replace(' ', '-').toLowerCase() %>">
+                        <%= product.status %>
+                      </span>
+                    </td>
+                  </tr>
+                <% }); %>
               </tbody>
             </table>
           </div>
