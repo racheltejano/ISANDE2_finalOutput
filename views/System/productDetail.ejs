@@ -462,23 +462,6 @@
           <h1><%= product.name %></h1>
           <h4><span>₱</span><%= product.price.toFixed(2) %></h4>
 
-          <!-- Product Option Selection -->
-          <% let hasSize = false; %>
-          <% product.attributes.forEach(attr => { %>
-            <% if (attr.name && attr.name !== 'Size') { %>
-              <% hasSize = true; %>
-            <% } %>
-          <% }); %>
-
-          <% if (hasSize) { %>
-            <select>
-              <% product.attributes.forEach(attr => { %>
-                <% if (attr.name === 'Size') { %>
-                  <option><%= attr.value %></option>
-                <% } %>
-              <% }); %>
-            </select>
-          <% } %>
 
           <input type="number" value="1" id="quantityInput" min="1" />
 

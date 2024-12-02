@@ -1,5 +1,7 @@
 const supabase = require('../database/supabaseClient');
 
+
+
 // Fetch products for the homepage
 const fetchProducts = async () => {
   try {
@@ -28,13 +30,24 @@ const fetchProducts = async () => {
 // Controller for homepage
 exports.getHomepage = async (req, res) => {
   try {
+    // Fetch products
     const products = await fetchProducts();
 
-    // Pass the products to the EJS template
-    return res.render('website/index', { products });
+    // Fetch categories
+    const { data: categories, error: categoryError } = await supabase
+      .from('categories')
+      .select('*');
+
+    if (categoryError) {
+      console.error('Error fetching categories:', categoryError);
+      throw categoryError;
+    }
+
+    // Pass products and categories to the EJS template
+    res.render('website/index', { products, categories });
   } catch (err) {
-    console.error('Error rendering homepage:', err);
-    res.status(500).send('Server Error');
+    console.error('Error rendering homepage:', err.message);
+    res.status(500).send('Internal Server Error');
   }
 };
 
